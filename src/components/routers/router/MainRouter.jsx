@@ -9,7 +9,8 @@ const MainRouter = () => {
     return (
         <Routes>
             <Route path="/*" element={<AppRouter />} />
-            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignIn />} />
+            <Route path="/sign-in" element={<SignIn type="SIGNIN" />} />
         </Routes>
     )
 }

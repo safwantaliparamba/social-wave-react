@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     //if theme already set then it will take that value or the default value - LIGHT
-    theme: localStorage.getItem("THEME") ?? 'LIGHT', // LIGHT or DARK
+    theme: localStorage.getItem("THEME") ?? 'DARK', // LIGHT or DARK
 }
 
 const uiSlice = createSlice({
