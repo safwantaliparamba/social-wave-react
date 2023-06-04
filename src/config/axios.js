@@ -1,18 +1,18 @@
 import axios from "axios";
 
 
-const URL = "http://localhost:8000/"
+const URL = "http://localhost:8000/api/v1"
 
-const joolbaConfig = axios.create({
+const api = axios.create({
     baseURL: URL
 })
 
-const joolbaAuthConfig = axios.create({
+const authApi = axios.create({
     baseURL: URL,
 })
 
 // middleware to add accessToken as auth credential
-joolbaAuthConfig.interceptors.request.use((request) => {
+authApi.interceptors.request.use((request) => {
     // get access token which we stored in localStorage
     const accessToken = localStorage.getItem("accessToken");
 
@@ -21,5 +21,5 @@ joolbaAuthConfig.interceptors.request.use((request) => {
     return request
 })
 
-export default joolbaConfig
-export { joolbaAuthConfig }
+export default api
+export { authApi }
