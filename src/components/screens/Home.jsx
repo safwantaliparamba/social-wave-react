@@ -1,14 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { Button } from '../modals/auth/Emailverification'
+import { useDispatch } from 'react-redux'
+import { logout } from '../../store/authSlice'
 
 
 const Home = () => {
+    const dispatch = useDispatch()
+    
+    const logoutHandler = ()=>{
+        dispatch(logout())
+    }
+
     return (
         <Wrapper>
             <h1>Home</h1>
             <Link to='/sign-in'>Sign In</Link>
             <Link to='/sign-up'>Sign Up</Link>
+            <Button onClick={logoutHandler}>Logout</Button>
         </Wrapper>
     )
 }
