@@ -9,10 +9,11 @@ import closeIcon from "../../../assets/icons/close.svg"
 import eyeIcon from "../../../assets/icons/eye.svg"
 import hideEyeIcon from "../../../assets/icons/hide-eye.svg"
 import googleLogo from "../../../assets/images/google-logo.svg"
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../../includes/ToggleTheme';
 import api from '../../../config/axios';
 import { login } from '../../../store/authSlice';
+import Emailverification from '../../modals/auth/Emailverification';
 
 
 
@@ -21,19 +22,24 @@ const SignIn = ({ type = "SIGNUP" }) => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams({
+        next: "/"
+    })
 
     const inputsInitialState = {
         name: "",
-        email: "chief@socialwaves.com",
-        password: "Password",
+        email: "",
+        password: "",
     }
-    const [errorMessage, setErrorMessage] = useState("")
     const [isError, setError] = useState("")
     const [isShow, setShow] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [isMailSent, setIsSent] = useState(false)
     const [inputs, setInputs] = useState({ ...inputsInitialState })
 
     useEffect(() => {
         setInputs({ ...inputsInitialState })
+        setError("")
     }, [location.pathname])
 
     const onChange = (e) => setInputs({ ...inputs, [e.target.name]: e.target.value })
@@ -43,10 +49,8 @@ const SignIn = ({ type = "SIGNUP" }) => {
     const closeErrorMessage = () => setError("close")
 
     const SignInHandler = () => {
-        var url = "/accounts/sign-in/"
-
         api
-            .post(url, { ...inputs })
+            .post("/accounts/sign-in/", { ...inputs })
             .then((res) => {
                 const { statusCode, data } = res.data
 
@@ -59,87 +63,115 @@ const SignIn = ({ type = "SIGNUP" }) => {
                         username: data.username ?? "",
                         sessionId: data.session_id,
                     }))
-                    navigate("/")
+                    const next = searchParams.get("next")
+
+                    navigate(next)
                 } else {
                     setError("active")
                     setErrorMessage(data.message)
                 }
             })
+            .catch(e => console.log(e.message))
     }
 
-    const SignupHandler = ()=>{
+    const SignupHandler = () => {
+        api
+            .post("/accounts/sign-up/", { ...inputs })
+            .then(res => {
+                const { statusCode, data } = res.data
 
+                if (statusCode === 6000) {
+                    setIsSent(data.is_mailed)
+                } else {
+                    // failure logic
+                    setError("active")
+                    setErrorMessage(data.message)
+                }
+            })
+            .catch(e => console.log(e.message))
+    }
+
+    const emailModalCloseHandler = () => {
+        setIsSent(false)
+        navigate('/sign-in/')
     }
 
     return (
-        <Wrapper theme={theme}>
-            <Top id='top-head' theme={theme}>
-                <div className="left">
-                    {/* <img src={theme === "DARK" ? logoDark : logoLight} alt="logo" /> */}
-                    <h1>Buy me a coffee</h1>
-                </div>
-                <ThemeToggle />
-            </Top>
-            <FormContainer>
-                <Box theme={theme}>
-                    <Header>
-                        <h1> {type === "SIGNUP" ? "SIGN UP" : "SIGN IN"}</h1>
-                    </Header>
-                    <Form>
-                        <ErrorMessageContainer
-                            className={isError}
-                        >
-                            <span>{errorMessage}</span>
-                            <img
-                                src={closeIcon}
-                                alt=""
-                                onClick={closeErrorMessage}
-                            />
-                        </ErrorMessageContainer>
-                        <InputContainer theme={theme}>
-                            <label htmlFor="email">Email</label>
-                            <input type="email" id="email" name="email" placeholder="Email" onChange={onChange} value={inputs.email} />
-                        </InputContainer>
-                        {type === "SIGNUP" && (
+        <>
+            {isMailSent &&
+                <Emailverification
+                    email={inputs.email}
+                    closeHandler={emailModalCloseHandler}
+                />
+            }
+            <Wrapper theme={theme}>
+                <Top id='top-head' theme={theme}>
+                    <div className="left">
+                        <h1>Socialwaves</h1>
+                    </div>
+                    <ThemeToggle />
+                </Top>
+                <FormContainer>
+                    <Box theme={theme}>
+                        <Header>
+                            <h1> {type === "SIGNUP" ? "SIGN UP" : "SIGN IN"}</h1>
+                        </Header>
+                        <Form>
+                            <ErrorMessageContainer
+                                className={isError}
+                            >
+                                <span>{errorMessage}</span>
+                                <img
+                                    src={closeIcon}
+                                    alt=""
+                                    onClick={closeErrorMessage}
+                                />
+                            </ErrorMessageContainer>
                             <InputContainer theme={theme}>
-                                <label htmlFor="name">Name</label>
-                                <input type="text" id="name" name="name" placeholder="Name" onChange={onChange} value={inputs.name} />
+                                <label htmlFor="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="Email" onChange={onChange} value={inputs.email} />
                             </InputContainer>
-                        )}
-                        <InputContainer theme={theme}>
-                            <label htmlFor="password">Password </label>
-                            <div className="input-container">
-                                <input type={!isShow ? "password" : "text"} id="password" name="password" placeholder="Password" onChange={onChange} value={inputs.password} />
-                                <img src={!isShow ? eyeIcon : hideEyeIcon} alt="" onClick={toggleShow} />
-                            </div>
-                        </InputContainer>
-                        <SubmitButton onClick={type === "SIGNIN" ? SignInHandler : SignupHandler}>
-                            Continue
-                        </SubmitButton>
-                    </Form>
-                    <OtherSection>
-                        <div className="top">
-                            <span className="or">
-                                or
-                            </span>
-                            <SubmitButton className="google">
-                                <img src={googleLogo} alt="google logo" />
-                                <span>continue with google</span>
+                            {type === "SIGNUP" && (
+                                <InputContainer theme={theme}>
+                                    <label htmlFor="name">Name</label>
+                                    <input type="text" id="name" name="name" placeholder="Name" onChange={onChange} value={inputs.name} />
+                                </InputContainer>
+                            )}
+                            <InputContainer theme={theme}>
+                                <label htmlFor="password">Password </label>
+                                <div className="input-container">
+                                    <input type={!isShow ? "password" : "text"} id="password" name="password" placeholder="Password" onChange={onChange} value={inputs.password} />
+                                    <img src={!isShow ? eyeIcon : hideEyeIcon} alt="" onClick={toggleShow} />
+                                </div>
+                            </InputContainer>
+                            <SubmitButton onClick={type === "SIGNIN" ? SignInHandler : SignupHandler}>
+                                Continue
                             </SubmitButton>
-                        </div>
-                        <div className="bottom">
-                            <span className='or new'>
-                                {type === "SIGNUP" ? (
-                                    <> Already a member ? <Link to="/sign-in">Sign In </Link></>
-                                ) : (
-                                    <> Don't have an account? <Link to="/sign-up">Sign Up </Link></>
-                                )}
-                            </span>
-                        </div>
-                    </OtherSection>
-                </Box>
-            </FormContainer>
-        </Wrapper>
+                        </Form>
+                        <OtherSection>
+                            <div className="top">
+                                <span className="or">
+                                    or
+                                </span>
+                                <SubmitButton className="google">
+                                    <img src={googleLogo} alt="google logo" />
+                                    <span>continue with google</span>
+                                </SubmitButton>
+                            </div>
+                            <div className="bottom">
+                                <span className='or new'>
+                                    {type === "SIGNUP" ? (
+                                        <> Already a member ? <Link to="/sign-in">Sign In </Link></>
+                                    ) : (
+                                        <> Don't have an account? <Link to="/sign-up">Sign Up </Link></>
+                                    )}
+                                </span>
+                            </div>
+                        </OtherSection>
+                    </Box>
+                </FormContainer>
+            </Wrapper>
+        </>
     )
 }
 
