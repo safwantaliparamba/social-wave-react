@@ -12,16 +12,24 @@ export const env = import.meta.env
 const App = () => {
 	const dispatch = useDispatch()
 	// global state
-	const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+	const { isAuthenticated, sessionId } = useSelector(state => state.auth)
 	// local state
 	const [isSessionExpired, setExpired] = useState(false)
 
+	const logoutHandler = () => {
+		dispatch(logout())
+		setExpired(true)
+	}
+
 	const validateUser = () => {
 		authApi
-			.get('/accounts/app/')
+			.get('/accounts/app/', {
+				params: {
+					session_id: sessionId,
+				}
+			})
 			.then(res => {
 				const { statusCode, data } = res.data
-				console.log(res.data);
 
 				if (statusCode === 6000) {
 					dispatch(editUserData({
@@ -30,16 +38,17 @@ const App = () => {
 						username: data.username,
 						// sessionId: data.session_id,
 					}))
+				} else {
+					logoutHandler()
 				}
 			})
 			.catch(e => {
 				if (e.response.status === 401) {
-					dispatch(logout())
-					setExpired(true)
+					logoutHandler()
 				}
 			})
 	}
-	console.log(isSessionExpired);
+
 	useEffect(() => {
 		if (isAuthenticated) {
 			validateUser()
@@ -48,7 +57,11 @@ const App = () => {
 
 	return (
 		<>
-			{isSessionExpired && <SessionExpired closeHandler={() => setExpired(false)} />}
+			{isSessionExpired &&
+				<SessionExpired
+					closeHandler={() => setExpired(false)}
+				/>
+			}
 			<MainRouter />
 		</>
 	)

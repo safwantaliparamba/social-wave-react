@@ -19,6 +19,7 @@ import Emailverification from '../../modals/auth/Emailverification';
 
 const SignIn = ({ type = "SIGNUP" }) => {
     const theme = useSelector(state => state.ui.theme)
+    const sessionId = useSelector(state => state.auth.sessionId)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -49,8 +50,12 @@ const SignIn = ({ type = "SIGNUP" }) => {
     const closeErrorMessage = () => setError("close")
 
     const SignInHandler = () => {
+        const params = { ...inputs, session_id: sessionId }
+
+        console.log(params);
+
         api
-            .post("/accounts/sign-in/", { ...inputs })
+            .post("/accounts/sign-in/", params)
             .then((res) => {
                 const { statusCode, data } = res.data
 
