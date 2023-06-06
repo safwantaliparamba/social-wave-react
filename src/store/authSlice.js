@@ -1,19 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api, { authApi } from "../config/axios";
 
-const getItem = (title = "") => {
+export const getItem = (title = "",json=false) => {
     const item = localStorage.getItem(title)
 
     if (item?.toLowerCase() === "true") {
         return true;
     } else if (item?.toLowerCase() === "false") {
         return false;
-    } else {
-        return item;
+    } else if (json){
+        return JSON.parse(item)
     }
+    
+    return item
 }
 
-const setItem = (title, item) => {
+export const setItem = (title, item) => {
     localStorage.setItem(title, item);
 
     return true
@@ -60,22 +62,10 @@ const authSlice = createSlice({
             return { ...state, ...payload }
         },
         logout: (state) => {
-            // return api
-            //     .post(`/accounts/sign-out/${state.sessionId}/`)
-            //     .then(res => {
-            //         const { statusCode } = res.data
-
-            //         if (statusCode === 6000) {
-            //             localStorage.clear()
-            //             return { ...initialState, isAuthenticated: false }
-            //         } else {
-            //             return { ...state }
-            //         }
-            //     })
-            //     .catch(err => console.log(err.message))
             localStorage.clear()
+            setItem("sessionId", state.sessionId)
 
-            return { ...initialState, isAuthenticated: false, sessionId: null }
+            return { ...initialState, isAuthenticated: false }
         }
     }
 })
