@@ -16,11 +16,6 @@ const App = () => {
 	// local state
 	const [isSessionExpired, setExpired] = useState(false)
 
-	const logoutHandler = () => {
-		dispatch(logout())
-		setExpired(true)
-	}
-
 	const validateUser = () => {
 		authApi
 			.get('/accounts/app/', {
@@ -36,15 +31,16 @@ const App = () => {
 						name: data.name,
 						email: data.email,
 						username: data.username,
-						// sessionId: data.session_id,
 					}))
 				} else {
-					logoutHandler()
+					// logoutHandler()
+					setExpired(true)
 				}
 			})
 			.catch(e => {
 				if (e.response.status === 401) {
-					logoutHandler()
+					// logoutHandler()
+					setExpired(true)
 				}
 			})
 	}

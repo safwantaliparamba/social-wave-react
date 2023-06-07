@@ -4,14 +4,21 @@ import { keyframes, styled } from 'styled-components'
 import BaseModal from '../base/BaseModal'
 import { Button } from './Emailverification'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logout } from '../../../store/authSlice'
 
 const SessionExpired = ({ closeHandler = () => { } }) => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    const loginHandler = () => {
-        navigate('/sign-in/')
+    // const loginHandler = () => {
+    //     navigate('/sign-in/')
+    //     closeHandler()
+    // }
+    const logoutHandler = () => {
+		dispatch(logout())
         closeHandler()
-    }
+	}
 
     return (
         <BaseModal>
@@ -19,7 +26,7 @@ const SessionExpired = ({ closeHandler = () => { } }) => {
                 <Content>
                     <h1>Session Expired</h1>
                     <p>Your session has been expired. Please login</p>
-                    <Button className='close' onClick={loginHandler}>
+                    <Button className='close' onClick={logoutHandler}>
                         Login
                     </Button>
                 </Content>
