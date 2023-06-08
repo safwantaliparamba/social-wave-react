@@ -1,17 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
-import api, { authApi } from "../config/axios";
 
-export const getItem = (title = "",json=false) => {
+
+export const getItem = (title = "", json = false) => {
     const item = localStorage.getItem(title)
 
     if (item?.toLowerCase() === "true") {
         return true;
     } else if (item?.toLowerCase() === "false") {
         return false;
-    } else if (json){
+    } else if (item === "null") {
+        return null;
+    } else if (item === "undefined") {
+        return undefined;
+    } else if (json) {
         return JSON.parse(item)
     }
-    
+
     return item
 }
 
