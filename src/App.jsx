@@ -46,9 +46,7 @@ const App = () => {
 	}
 
 	useEffect(() => {
-		if (isAuthenticated) {
-			validateUser()
-		}
+		if (isAuthenticated) validateUser()
 	}, [])
 
 	return (

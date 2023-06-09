@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getItem } from "../store/authSlice";
 
 
 const URL = "http://localhost:8000/api/v1"
@@ -14,9 +15,13 @@ const authApi = axios.create({
 // middleware to add accessToken as auth credential
 authApi.interceptors.request.use((request) => {
     // get access token which we stored in localStorage
-    const accessToken = localStorage.getItem("accessToken");
+    const sessionId = getItem("sessionId")
+    const accessToken = getItem("accessToken");
 
     request.headers.Authorization = `Bearer ${accessToken}`
+    request.params = {
+        session_id: sessionId ?? null,
+    }
 
     return request
 })
