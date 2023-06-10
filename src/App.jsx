@@ -12,17 +12,13 @@ export const env = import.meta.env
 const App = () => {
 	const dispatch = useDispatch()
 	// global state
-	const { isAuthenticated, sessionId } = useSelector(state => state.auth)
+	const { isAuthenticated } = useSelector(state => state.auth)
 	// local state
 	const [isSessionExpired, setExpired] = useState(false)
-
+	// functions
 	const validateUser = () => {
 		authApi
-			.get('/accounts/app/', {
-				params: {
-					session_id: sessionId,
-				}
-			})
+			.get('/accounts/app/')
 			.then(res => {
 				const { statusCode, data } = res.data
 
@@ -33,20 +29,20 @@ const App = () => {
 						username: data.username,
 					}))
 				} else {
-					// logoutHandler()
 					setExpired(true)
 				}
 			})
 			.catch(e => {
 				if (e.response.status === 401) {
-					// logoutHandler()
 					setExpired(true)
 				}
 			})
 	}
 
 	useEffect(() => {
-		if (isAuthenticated) validateUser()
+		const authURLS = ['/sign-in','/sign-up','/sign-in/','/sign-up/',]
+		
+		if (isAuthenticated && !authURLS.includes(location.pathname)) validateUser()
 	}, [])
 
 	return (

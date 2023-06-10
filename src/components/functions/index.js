@@ -12,12 +12,8 @@ export const logoutHandler = (dispatch) => {
         .then(res => {
             const { statusCode } = res.data
 
-            console.log(res.data);
-
             if (statusCode === 6000) {
                 dispatch(logout())
-            } else {
-                
             }
         })
         .catch(err => console.log(err.message))
