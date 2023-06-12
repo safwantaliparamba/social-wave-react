@@ -1,10 +1,9 @@
-import styled from "styled-components";
+// import styled from "styled-components";
 import { Route, Routes } from "react-router-dom";
 
 import AppRouter from "./AppRouter";
-import SignIn from "../../../../gitignores/SignIn";
-import PrivateRoute from "../routes/PrivateRoute";
 import SignUp from "../../screens/auth/SignUp";
+import PrivateRoute from "../routes/PrivateRoute";
 
 
 const MainRouter = () => {

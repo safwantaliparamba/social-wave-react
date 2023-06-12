@@ -16,311 +16,330 @@ import hideIcon from '../../../assets/icons/hide-eye.svg'
 import heroImg from '../../../assets/images/hero.svg'
 import googleLogo from '../../../assets/images/google-logo.svg'
 import Emailverification from '../../modals/auth/Emailverification'
+import useAuthApi from '../../hooks/useAuthApi'
+import axios from 'axios'
+import useApi from '../../hooks/useApi'
 
 
 const SignUp = ({ type = "SIGNUP" }) => {
-    // -------global state-------
-    const theme = useSelector(state => state.ui.theme)
-    const { sessionId } = useSelector(state => state.auth)
+	// -------global state-------
+	const theme = useSelector(state => state.ui.theme)
+	const { sessionId } = useSelector(state => state.auth)
 
-    // ----------hooks----------
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const location = useLocation()
-    const [searchParams] = useSearchParams({
-        next: "/"
-    })
+	// ----------hooks----------
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
+	const location = useLocation()
+	const [searchParams] = useSearchParams({
+		next: "/"
+	})
+	const { api: loginApi, controller: loginAborter } = useApi()
+	// local variables
+	const initialInputs = {
+		name: "",
+		email: "",
+		password: "",
+		confirmPassword: "",
+	}
+	// -------local state-------
+	const [inputs, setInputs] = useState({ ...initialInputs })
+	const [isShow, setShow] = useState({
+		password: false,
+		confirmPassword: false,
+	})
+	const [errorMessage, setErrorMessage] = useState("")
+	const [isError, setError] = useState("") // "active" or "close"
+	const [isMailSent, setIsSent] = useState(false)
 
-    // local variables
-    const initialInputs = {
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-    }
-    // -------local state-------
-    const [inputs, setInputs] = useState({ ...initialInputs })
-    const [isShow, setShow] = useState({
-        password: false,
-        confirmPassword: false,
-    })
-    const [errorMessage, setErrorMessage] = useState("")
-    const [isError, setError] = useState("") // "active" or "close"
-    const [isMailSent, setIsSent] = useState(false)
+	// Effects
+	useEffect(() => {
+		setInputs({ ...initialInputs })
+		setError("")
+	}, [location.pathname])
 
-    // Effects
-    useEffect(() => {
-        setInputs({ ...initialInputs })
-        setError("")
-    }, [location.pathname])
+	// -----functions----
 
-    // -----functions----
+	// function to set error messages  
+	const setErrors = (errorMessage = "") => {
+		setErrorMessage(errorMessage)
+		setError("active")
 
-    // function to set error messages  
-    const setErrors = (errorMessage = "") => {
-        setErrorMessage(errorMessage)
-        setError("active")
+		return true
+	}
 
-        return true
-    }
+	// function for capture inputs 
+	const onChange = useMemo(() =>
+		(e) => {
+			setInputs({ ...inputs, [e.target.name]: e.target.value })
+		}
+		, [inputs])
 
-    // function for capture inputs 
-    const onChange = useMemo(() =>
-        (e) => {
-            setInputs({ ...inputs, [e.target.name]: e.target.value })
-        }
-        , [inputs])
+	// function for toggle password type
+	const togglePasswordType = useMemo(() => (
+		(password_type) => setShow({ ...isShow, [password_type]: !isShow[password_type] })
+	), [isShow])
 
-    // function for toggle password type
-    const togglePasswordType = useMemo(() => (
-        (password_type) => setShow({ ...isShow, [password_type]: !isShow[password_type] })
-    ), [isShow])
+	// function for closing error message dialogue box
+	const closeErrorMessage = useMemo(() => (
+		() => {
+			setErrorMessage("")
+			setError("close")
+		}
+	), [])
+	// email validation function
+	const validateEmail = (email = "") => {
+		const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return regex.test(email);
+	}
 
-    // function for closing error message dialogue box
-    const closeErrorMessage = useMemo(() => (
-        () => {
-            setErrorMessage("")
-            setError("close")
-        }
-    ), [])
-    // email validation function
-    const validateEmail = (email = "") => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
+	const validate = () => {
 
-    const validate = () => {
-
-        if (type === "SIGNUP") {
-            // signup error validation
-            if (inputs.name.length < 6) {
-                return setErrors("Please ensure name has atleast 6 characters")
-            }
-            if (inputs.password !== inputs.confirmPassword) {
-                return setErrors("Entered passwords are not equal")
-            }
-        }
-        // common error validation
-        if (!inputs.email.length){
-            return setErrors("Please enter your email")
-        }
-        if (!validateEmail(inputs.email)) {
-            return setErrors("please enter a valid email")
-        }
-        if (inputs.password.length < 8) {
-            return setErrors("Please ensure password has atleast 8 characters")
-        }
+		if (type === "SIGNUP") {
+			// signup error validation
+			if (inputs.name.length < 6) {
+				return setErrors("Please ensure name has atleast 6 characters")
+			}
+			if (inputs.password !== inputs.confirmPassword) {
+				return setErrors("Entered passwords are not equal")
+			}
+		}
+		// common error validation
+		if (!inputs.email.length) {
+			return setErrors("Please enter your email")
+		}
+		if (!validateEmail(inputs.email)) {
+			return setErrors("please enter a valid email")
+		}
+		if (inputs.password.length < 8) {
+			return setErrors("Please ensure password has atleast 8 characters")
+		}
 
 
-        return false
-    }
+		return false
+	}
 
-    // Sign-in/Login Handler
-    const SignInHandler = useMemo(() => (
-        () => {
-            const isErrorsOccured = validate()
+	// Sign-in/Login Handler
+	const SignInHandler = useMemo(() => (
+		async () => {
+			const isErrorsOccured = validate()
 
-            if (isErrorsOccured) {
-                return
-            }
+			if (isErrorsOccured) {
+				return
+			}
 
-            const params = { ...inputs, session_id: sessionId }
-            api
-                .post("/accounts/sign-in/", params)
-                .then((res) => {
-                    const { statusCode, data } = res.data
+			const params = { ...inputs, session_id: sessionId }
+			loginApi
+				.post("/accounts/sign-in/", params, {
+					signal: loginAborter.signal,
+				})
+				.then((res) => {
+					const { statusCode, data } = res.data
 
-                    if (statusCode === 6000) {
-                        dispatch(login({
-                            name: data.name ?? "",
-                            email: data.email,
-                            accessToken: data.access,
-                            refreshToken: data.refresh,
-                            username: data.username ?? "",
-                            sessionId: data.session_id,
-                        }))
-                        const next = searchParams.get("next")
+					if (statusCode === 6000) {
+						dispatch(login({
+							name: data.name ?? "",
+							email: data.email,
+							accessToken: data.access,
+							refreshToken: data.refresh,
+							username: data.username ?? "",
+							sessionId: data.session_id,
+						}))
+						const next = searchParams.get("next")
 
-                        navigate(next)
-                    } else {
-                        setErrors(data.message)
-                    }
-                })
-                .catch(e => console.log(e.message))
-        }
-    ), [inputs])
+						// navigate(next)
+					} else {
+						setErrors(data.message)
+					}
+				})
+				.catch(e => {
 
-    // Signup/Register Handler
-    const SignupHandler = useMemo(() => (
-        () => {
-            const isErrorOccured = validate()
+					if (axios.isCancel(e)) {
+						console.log("Request cancelled catch");
+					}
+					console.log(e.message,"error message")
+				})
+		}
+	), [inputs])
 
-            if (isErrorOccured) {
-                return
-            }
-            api
-                .post("/accounts/sign-up/", { ...inputs })
-                .then(res => {
-                    const { statusCode, data } = res.data
+	useEffect(() => {
+		console.log('component mounted');
+		return () => {
+			console.log('unmounted....');
+			console.log(loginAborter.abort())
+		}
+	}, [location.pathname])
 
-                    if (statusCode === 6000) {
-                        setIsSent(data.is_mailed)
-                    } else {
-                        setErrors(data.message)
-                    }
-                })
-                .catch(e => console.log(e.message))
-        }
-    ), [inputs])
+	// Signup/Register Handler
+	const SignupHandler = useMemo(() => (
+		() => {
+			const isErrorOccured = validate()
 
-    // Email modal close handler
-    const emailModalCloseHandler = useMemo(() => (
-        () => {
-            setIsSent(false)
-            navigate('/sign-in/')
-        }
-    ), [])
+			if (isErrorOccured) {
+				return
+			}
+			api
+				.post("/accounts/sign-up/", { ...inputs })
+				.then(res => {
+					const { statusCode, data } = res.data
 
-    // title based on screen(SIGNUP | SIGNIN)
-    const title = type === "SIGNUP" ? "Create an account" : "Hi, Welcome Back! 👋"
-    // google authentication title based on screen(SIGNUP || SIGNIN)
-    const buttonTitle = type === "SIGNUP" ? "Sign Up" : "Sign In"
+					if (statusCode === 6000) {
+						setIsSent(data.is_mailed)
+					} else {
+						setErrors(data.message)
+					}
+				})
+				.catch(e => console.log(e.message))
+		}
+	), [inputs])
 
-    return (
-        <>
-            {isMailSent &&
-                <Emailverification
-                    email={inputs.email}
-                    closeHandler={emailModalCloseHandler}
-                />
-            }
-            <Wrapper theme={theme}>
-                <Left theme={theme}>
-                    <div className="top">
-                        <Logo />
-                    </div>
-                    <div className="hero">
-                        <img src={heroImg} alt="" />
-                    </div>
-                </Left>
-                <Right theme={theme}>
-                    <ToggleWrapper>
-                        <div className="logo-wrapper">
-                            <Logo />
-                        </div>
-                        <ThemeToggle />
-                    </ToggleWrapper>
-                    <div>
-                        <Top theme={theme}>
-                            <h1>{title}</h1>
-                            <span>Where Opinions Shape News</span>
-                        </Top>
-                        <Form>
-                            <ErrorMessageContainer
-                                className={isError}
-                            >
-                                <span>{errorMessage}</span>
-                                <img
-                                    src={closeIcon}
-                                    alt=""
-                                    onClick={closeErrorMessage}
-                                />
-                            </ErrorMessageContainer>
-                            {type === "SIGNUP" && (
-                                <InputContainer>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        placeholder="Name"
-                                        value={inputs.name}
-                                        onChange={onChange}
-                                    />
-                                </InputContainer>
-                            )}
-                            <InputContainer>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Email"
-                                    onChange={onChange}
-                                    value={inputs.email}
-                                />
-                            </InputContainer>
-                            <InputContainer>
-                                <input
-                                    type={!isShow.password ? "password" : "text"}
-                                    name="password"
-                                    placeholder="Password"
-                                    onChange={onChange}
-                                    value={inputs.password}
-                                />
-                                <img
-                                    src={isShow.password ? eyeIcon : hideIcon}
-                                    alt="toggle password"
-                                    onClick={() => togglePasswordType("password")}
-                                />
-                            </InputContainer>
-                            {type === "SIGNUP" && (
-                                <InputContainer>
-                                    <input
-                                        type={!isShow.confirmPassword ? "password" : "text"}
-                                        name="confirmPassword"
-                                        placeholder="Confirm Password"
-                                        onChange={onChange}
-                                        value={inputs.confirmPassword}
-                                    />
-                                    <img
-                                        src={isShow.confirmPassword ? eyeIcon : hideIcon}
-                                        alt="toggle password"
-                                        onClick={() => togglePasswordType("confirmPassword")}
-                                    />
-                                </InputContainer>
-                            )}
-                            <SubmitButton
-                                theme={theme}
-                                onClick={type === "SIGNIN" ? SignInHandler : SignupHandler}
-                            >
-                                <span>{buttonTitle}</span>
-                            </SubmitButton>
+	// Email modal close handler
+	const emailModalCloseHandler = useMemo(() => (
+		() => {
+			setIsSent(false)
+			navigate('/sign-in/')
+		}
+	), [])
 
-                            {type === "SIGNIN" && (
-                                <ForgotPasswordSection theme={theme}>
-                                    <div className="right">
-                                        <span>Forgot Password?</span>
-                                    </div>
-                                </ForgotPasswordSection>
-                            )}
+	// title based on screen(SIGNUP | SIGNIN)
+	const title = type === "SIGNUP" ? "Create an account" : "Hi, Welcome Back! 👋"
+	// google authentication title based on screen(SIGNUP || SIGNIN)
+	const buttonTitle = type === "SIGNUP" ? "Sign Up" : "Sign In"
 
-                        </Form>
-                        <Actions theme={theme}>
-                            <div className="or">
-                                <span>Or</span>
-                            </div>
-                            <SubmitButton className="google" theme={theme}>
-                                <img src={googleLogo} alt="" />
-                                <span>{type === "SIGNUP" ? "Sign Up" : "Login"} with Google</span>
-                            </SubmitButton>
-                            <LoginActionContainer theme={theme}>
-                                {
-                                    type === "SIGNUP" ? (
-                                        <>
-                                            <span theme={theme}>Already have an account?</span>
-                                            <SilentLink to='/sign-in'>Login</SilentLink>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span theme={theme}>Don’t have an account?</span>
-                                            <SilentLink to='/sign-up'>Sign up</SilentLink>
-                                        </>
-                                    )
-                                }
-                            </LoginActionContainer>
-                        </Actions>
-                    </div>
-                </Right>
-            </Wrapper>
-        </>
-    )
+	return (
+		<>
+			{isMailSent &&
+				<Emailverification
+					email={inputs.email}
+					closeHandler={emailModalCloseHandler}
+				/>
+			}
+			<Wrapper theme={theme}>
+				<Left theme={theme}>
+					<div className="top">
+						<Logo />
+					</div>
+					<div className="hero">
+						<img src={heroImg} alt="" />
+					</div>
+				</Left>
+				<Right theme={theme}>
+					<ToggleWrapper>
+						<div className="logo-wrapper">
+							<Logo />
+						</div>
+						<ThemeToggle />
+					</ToggleWrapper>
+					<div>
+						<Top theme={theme}>
+							<h1>{title}</h1>
+							<span>Where Opinions Shape News</span>
+						</Top>
+						<Form>
+							<ErrorMessageContainer
+								className={isError}
+							>
+								<span>{errorMessage}</span>
+								<img
+									src={closeIcon}
+									alt=""
+									onClick={closeErrorMessage}
+								/>
+							</ErrorMessageContainer>
+							{type === "SIGNUP" && (
+								<InputContainer>
+									<input
+										type="text"
+										name="name"
+										placeholder="Name"
+										value={inputs.name}
+										onChange={onChange}
+									/>
+								</InputContainer>
+							)}
+							<InputContainer>
+								<input
+									type="email"
+									name="email"
+									placeholder="Email"
+									onChange={onChange}
+									value={inputs.email}
+								/>
+							</InputContainer>
+							<InputContainer>
+								<input
+									type={!isShow.password ? "password" : "text"}
+									name="password"
+									placeholder="Password"
+									onChange={onChange}
+									value={inputs.password}
+								/>
+								<img
+									src={isShow.password ? eyeIcon : hideIcon}
+									alt="toggle password"
+									onClick={() => togglePasswordType("password")}
+								/>
+							</InputContainer>
+							{type === "SIGNUP" && (
+								<InputContainer>
+									<input
+										type={!isShow.confirmPassword ? "password" : "text"}
+										name="confirmPassword"
+										placeholder="Confirm Password"
+										onChange={onChange}
+										value={inputs.confirmPassword}
+									/>
+									<img
+										src={isShow.confirmPassword ? eyeIcon : hideIcon}
+										alt="toggle password"
+										onClick={() => togglePasswordType("confirmPassword")}
+									/>
+								</InputContainer>
+							)}
+							<SubmitButton
+								theme={theme}
+								onClick={type === "SIGNIN" ? SignInHandler : SignupHandler}
+							>
+								<span>{buttonTitle}</span>
+							</SubmitButton>
+
+							{type === "SIGNIN" && (
+								<ForgotPasswordSection theme={theme}>
+									<div className="right">
+										<span>Forgot Password?</span>
+									</div>
+								</ForgotPasswordSection>
+							)}
+
+						</Form>
+						<Actions theme={theme}>
+							<div className="or">
+								<span>Or</span>
+							</div>
+							<SubmitButton className="google" theme={theme}>
+								<img src={googleLogo} alt="" />
+								<span>{type === "SIGNUP" ? "Sign Up" : "Login"} with Google</span>
+							</SubmitButton>
+							<LoginActionContainer theme={theme}>
+								{
+									type === "SIGNUP" ? (
+										<>
+											<span theme={theme}>Already have an account?</span>
+											<SilentLink to='/sign-in'>Login</SilentLink>
+										</>
+									) : (
+										<>
+											<span theme={theme}>Don’t have an account?</span>
+											<SilentLink to='/sign-up'>Sign up</SilentLink>
+										</>
+									)
+								}
+							</LoginActionContainer>
+						</Actions>
+					</div>
+				</Right>
+			</Wrapper>
+		</>
+	)
 }
 
 export default SignUp
