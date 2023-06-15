@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import './assets/css/style.css';
-import MainRouter from './components/routers/router/MainRouter';
+
 import { useDispatch, useSelector } from 'react-redux';
-import { authApi } from './config/axios';
-import { editUserData, logout } from './store/authSlice';
+
+import './assets/css/style.css';
+import { editUserData} from './store/authSlice';
+import useAuthApi from './components/hooks/useAuthApi';
+import MainRouter from './components/routers/router/MainRouter';
 import SessionExpired from './components/modals/auth/SessionExpired';
 
 
@@ -11,6 +13,7 @@ export const env = import.meta.env
 
 const App = () => {
 	const dispatch = useDispatch()
+	const {authApi, controller} = useAuthApi()
 	// global state
 	const { isAuthenticated } = useSelector(state => state.auth)
 	// local state

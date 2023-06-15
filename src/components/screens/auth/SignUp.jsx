@@ -1,24 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
+import axios from 'axios'
 import styled, { keyframes } from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 // import tickIcon from '../../../assets/icons/tick.svg'
 import Logo from '../../includes/Logo'
-import api from '../../../config/axios'
+import useApi from '../../hooks/useApi'
 import { login } from '../../../store/authSlice'
 import SilentLink from '../../includes/SilentLink'
 import eyeIcon from '../../../assets/icons/eye.svg'
 import ThemeToggle from '../../includes/ToggleTheme'
+import heroImg from '../../../assets/images/hero.svg'
 import closeIcon from '../../../assets/icons/close.svg'
 import hideIcon from '../../../assets/icons/hide-eye.svg'
-import heroImg from '../../../assets/images/hero.svg'
 import googleLogo from '../../../assets/images/google-logo.svg'
 import Emailverification from '../../modals/auth/Emailverification'
-import useAuthApi from '../../hooks/useAuthApi'
-import axios from 'axios'
-import useApi from '../../hooks/useApi'
 
 
 const SignUp = ({ type = "SIGNUP" }) => {
@@ -34,6 +32,8 @@ const SignUp = ({ type = "SIGNUP" }) => {
 		next: "/"
 	})
 	const { api: loginApi, controller: loginAborter } = useApi()
+	const { api: signupApi, controller: signupController } = useApi()
+
 	// local variables
 	const initialInputs = {
 		name: "",
@@ -146,7 +146,7 @@ const SignUp = ({ type = "SIGNUP" }) => {
 						}))
 						const next = searchParams.get("next")
 
-						// navigate(next)
+						navigate(next)
 					} else {
 						setErrors(data.message)
 					}
@@ -154,20 +154,12 @@ const SignUp = ({ type = "SIGNUP" }) => {
 				.catch(e => {
 
 					if (axios.isCancel(e)) {
-						console.log("Request cancelled catch");
+						console.log("Request cancelled");
 					}
-					console.log(e.message,"error message")
+					console.log(e.message, "error message")
 				})
 		}
 	), [inputs])
-
-	useEffect(() => {
-		console.log('component mounted');
-		return () => {
-			console.log('unmounted....');
-			console.log(loginAborter.abort())
-		}
-	}, [location.pathname])
 
 	// Signup/Register Handler
 	const SignupHandler = useMemo(() => (
@@ -177,8 +169,10 @@ const SignUp = ({ type = "SIGNUP" }) => {
 			if (isErrorOccured) {
 				return
 			}
-			api
-				.post("/accounts/sign-up/", { ...inputs })
+			signupApi
+				.post("/accounts/sign-up/", { ...inputs }, {
+					signal: signupController.signal
+				})
 				.then(res => {
 					const { statusCode, data } = res.data
 
@@ -191,6 +185,14 @@ const SignUp = ({ type = "SIGNUP" }) => {
 				.catch(e => console.log(e.message))
 		}
 	), [inputs])
+
+	useEffect(() => {
+
+		return () => {
+			signupController.abort("user navigated to another page")
+			loginAborter.abort("user navigated to another page")
+		}
+	}, [location.pathname])
 
 	// Email modal close handler
 	const emailModalCloseHandler = useMemo(() => (
