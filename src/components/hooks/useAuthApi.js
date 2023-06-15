@@ -10,47 +10,46 @@ const useAuthApi = () => {
     const authApi = axios.create({
         baseURL: URL,
     })
-
-    const CancelToken = axios.CancelToken.source()
     const controller = new AbortController();
 
     // middleware to add accessToken as auth credential
-    const interceptor = authApi.interceptors.request.use((request) => {
+    authApi.interceptors.request.use((request) => {
         // get access token which we stored in localStorage
         const sessionId = getItem("sessionId")
         const accessToken = getItem("accessToken");
 
-        request.headers.Authorization = `Bearer ${accessToken}`
-        request.signal = controller.signal
-        
-        request.params = {
-            session_id: sessionId ?? null,
+        request = {
+            ...request, 
+            headers:{
+                Authorization: `Bearer ${accessToken}`,
+            },
+            signal: controller.signal,
+            params: {
+                session_id: sessionId ?? null,
+            },
+        }
+
+        if (controller.signal.aborted){
+            console.log("aborted");
+
+            // return 
         }
 
         return request
 
     }, (err) => {
 
-        if (axios.isCancel(err)) {
-            console.log("request canceled by the user");
-        } else {
-            console.log("error occured");
-        }
-
         return err
     })
 
     useEffect(() => {
-        console.log("Mounted");
 
         return () => {
-            CancelToken.cancel("cancelled")
-            console.log("Unmounted");
-            authApi.interceptors.response.eject(interceptor)
+            controller.abort("request Cancelled hook cleanup")
         }
     }, [location.pathname])
 
-    return { authApi, CancelToken }
+    return { authApi, controller }
 }
 
 export default useAuthApi

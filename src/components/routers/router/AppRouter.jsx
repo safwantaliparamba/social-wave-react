@@ -4,13 +4,16 @@ import { Route, Routes } from "react-router-dom";
 
 // local imports 
 import Home from '../../screens/Home';
+import Nav from '../../includes/home/Nav';
 
 
 const AppRouter = () => {
     return (
-        <Routes>
-            <Route index element={<Home />} />
-        </Routes>
+        <Nav>
+            <Routes>
+                <Route index element={<Home />} />
+            </Routes>
+        </Nav>
     )
 }
 

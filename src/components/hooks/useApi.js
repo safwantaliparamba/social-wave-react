@@ -17,9 +17,12 @@ const useApi = () => {
         // get access token which we stored in localStorage
         const sessionId = getItem("sessionId")
     
-        request.signal = controller.signal
-        request.params = {
-            session_id: sessionId ?? null,
+        request = {
+            ...request,
+            signal: controller.signal,
+            params: {
+                session_id: sessionId ?? null,
+            } 
         }
 
         if (controller.signal.aborted){
