@@ -1,10 +1,10 @@
-import { authApi } from "../../config/axios"
 import { getItem, logout } from "../../store/authSlice"
+import useAuthApi from "../hooks/useAuthApi"
 
 
 //logout method
 export const logoutHandler = (dispatch) => {
-    // dispatch(logout())
+    const { authApi } = useAuthApi()
     const sessionId = getItem("sessionId")
 
     authApi
@@ -30,4 +30,22 @@ export default function debounce(fn, delay) {
             fn.apply(this, arguments);
         }, delay);
     };
+}
+
+// function to trim text based on maxlength
+export function trimText(text = "", maxLength = 10) {
+    if (text.length <= maxLength) {
+        return text;
+    } else {
+        return text.slice(0, maxLength).trim() + '...';
+    }
+}
+
+// Function to check if string is equal to location.pathname
+export function isPathnameEqual(string, pathname = location.pathname) {
+    // Remove the trailing '/' from the pathname
+    const trimmedPathname = pathname.replace(/\/$/, '');
+
+    // Check if the trimmed pathname is equal to the provided string
+    return trimmedPathname === string;
 }
