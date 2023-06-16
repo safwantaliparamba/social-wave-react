@@ -1,36 +1,16 @@
 import React from 'react'
+
 import { styled } from 'styled-components'
 
+import Header from './includes/Header'
+import LeftSideBar from './includes/LeftSideBar'
+import RightSideBar from './includes/RightSideBar'
 
-const Header = ({ }) => {
-    return (
-        <HeaderContainer>
-
-        </HeaderContainer>
-    )
-}
-
-
-const SideBar = ({ }) => {
-    return (
-        <SideBarContainer>
-
-        </SideBarContainer>
-    )
-}
-
-const RightSideBar = ({ }) => {
-    return (
-        <RightSideBarContainer>
-
-        </RightSideBarContainer>
-    )
-}
 
 const Nav = ({ children }) => { 
     return (
         <MainWrapper>
-            <SideBar />
+            <LeftSideBar />
             <MainHomeWrapper>
                 <Header />
                 <HomeWrapper>
@@ -60,18 +40,6 @@ const HomeWrapper = styled.div`
 `
 
 const Home = styled.div`
-    width: 85%;
-`
-
-const SideBarContainer = styled.div`
-    width: 20%;
-    border: 1px solid #111;
-`
-const HeaderContainer = styled.div`
-    height: 100px;
-    border: 1px solid #111;
-`
-const RightSideBarContainer = styled.div`
-    width: 15%;
-    border: 1px solid #111;
+    width: 75%;
+    min-height: 70vh;
 `

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './assets/css/style.css';
-import { editUserData} from './store/authSlice';
+import { editUserData } from './store/authSlice';
 import useAuthApi from './components/hooks/useAuthApi';
 import MainRouter from './components/routers/router/MainRouter';
 import SessionExpired from './components/modals/auth/SessionExpired';
@@ -13,7 +13,7 @@ export const env = import.meta.env
 
 const App = () => {
 	const dispatch = useDispatch()
-	const {authApi, controller} = useAuthApi()
+	const { authApi, controller } = useAuthApi()
 	// global state
 	const { isAuthenticated } = useSelector(state => state.auth)
 	// local state
@@ -43,9 +43,13 @@ const App = () => {
 	}
 
 	useEffect(() => {
-		const authURLS = ['/sign-in','/sign-up','/sign-in/','/sign-up/',]
-		
-		if (isAuthenticated && !authURLS.includes(location.pathname)) validateUser()
+		const authURLS = ['/sign-in', '/sign-up', '/sign-in/', '/sign-up/',]
+
+		if (isAuthenticated && !authURLS.includes(location.pathname.toLowerCase())) validateUser()
+
+		return () => {
+			controller.abort()
+		}
 	}, [])
 
 	return (
