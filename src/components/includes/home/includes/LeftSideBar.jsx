@@ -1,3 +1,5 @@
+import { useMemo, useState } from "react"
+
 import { useSelector } from "react-redux"
 import { styled } from "styled-components"
 import { nanoid } from "@reduxjs/toolkit"
@@ -8,28 +10,29 @@ import SilentLink from "../../SilentLink"
 import homeDark from "/icons/home-dark.svg"
 import homeLight from "/icons/home-light.svg"
 import profile from "/images/profile-demo.jpg"
+import logoutRed from "/icons/logout-red.svg"
+import premiumGold from "/icons/premium-gold.svg"
 import exploreDark from "/icons/explore-dark.svg"
 import exploreLight from "/icons/explore-light.svg"
 import dropdownDark from "/icons/dropdown-dark.svg"
 import dropdownLigh from "/icons/dropdown-light.svg"
-import bookmarkDark from "/icons/bookmark-dark.svg"
-import bookmarkLight from "/icons/bookmark-light.svg"
-import notificationDark from "/icons/notification-dark.svg"
-import notificationLight from "/icons/notification-light.svg"
-import logoutRed from "/icons/logout-red.svg"
 import settingsDark from "/icons/settings-dark.svg"
 import settingsLight from "/icons/settings-light.svg"
-import premiumLight from "/icons/premium-light.svg"
-import premiumDark from "/icons/premium-dark.svg"
-import premiumGold from "/icons/premium-gold.svg"
+import bookmarkDark from "/icons/bookmark-dark.svg"
+import bookmarkLight from "/icons/bookmark-light.svg"
+import analyticsDark from "/icons/analytics-dark.svg"
+import analyticsLight from "/icons/analytics-light.svg"
+import notificationDark from "/icons/notification-dark.svg"
+import notificationLight from "/icons/notification-light.svg"
 import { isPathnameEqual, trimText } from "../../../functions"
-import { useMemo } from "react"
+// import premiumLight from "/icons/premium-light.svg"
+// import premiumDark from "/icons/premium-dark.svg"
 
 
 const LeftSideBar = ({ }) => {
     // global states //
     const { theme } = useSelector(state => state.ui)
-    const { username } = useSelector(state => state.auth)
+    const { username, isProMember } = useSelector(state => state.auth)
 
     // Hooks //
     const navigate = useNavigate()
@@ -79,6 +82,13 @@ const LeftSideBar = ({ }) => {
             },
             {
                 id: nanoid(),
+                title: "Analytics",
+                imgLight: analyticsLight,
+                imgDark: analyticsDark,
+                url: '/analytics',
+            },
+            {
+                id: nanoid(),
                 title: "Settings",
                 imgLight: settingsLight,
                 imgDark: settingsDark,
@@ -87,16 +97,8 @@ const LeftSideBar = ({ }) => {
         ]
     ), [])
 
-    const bottomNavItems = useMemo(() => (
-        [
-            {
-                id: nanoid(),
-                title: "Buy Premium",
-                imgLight: premiumGold,
-                imgDark: premiumGold,
-                action: buyPremiumHandler,
-                className: "golden-btn",
-            },
+    const bottomNavItems = useMemo(() => {
+        const temp = [
             {
                 id: nanoid(),
                 title: "Logout",
@@ -106,7 +108,22 @@ const LeftSideBar = ({ }) => {
                 className: "logout",
             },
         ]
-    ), [])
+
+        if (!isProMember) {
+            temp.unshift({
+                id: nanoid(),
+                title: "Buy Premium",
+                imgLight: premiumGold,
+                imgDark: premiumGold,
+                action: buyPremiumHandler,
+                className: "golden-btn",
+            })
+        }
+
+        return temp
+
+    }, [])
+
 
     return (
         <Container theme={theme}>
@@ -118,7 +135,7 @@ const LeftSideBar = ({ }) => {
                 </Head>
                 <Nav>
                     <Profile theme={theme}>
-                        <div className="wrapper">
+                        <div className="wrapper" onClick={e => navigate(`/${username}`)}>
                             <img className="profile" src={profile} alt="" />
                             <span>{trimText(username, 14)}</span>
                         </div>
@@ -185,14 +202,17 @@ export default LeftSideBar
 
 const Container = styled.div`
     width: 20%;
-    height: 100vh;
+    height: calc(100vh - 24px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: 1px solid #222222;
+    margin: 12px;
+    border: 1px solid ${({ theme }) => theme === "DARK" ? "rgb(38,39,42)" : "transparent"};
+    /* border: 1px solid #222222; */
+    box-shadow: 0 0 10px rgba(0,0,0,0.2) inset;
     transition: all 0.4s ease-in-out;
     padding: 28px 0;
-    background-color: ${({ theme }) => theme === "DARK" ? "#111" : "#fff"};
+    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#fff"};
 `
 
 const Head = styled.header`
@@ -297,14 +317,14 @@ const NavItem = styled.div`
             }
         }
         span{
-            font-size: 16px;
+            font-size: 15px;
             color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#111"};
         }
     }
 
     span.count{
         font-size: 14px;
-        color: red;
+        // color: red;
         font-weight: 600;
         /* color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#111"}; */
         /* color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#111"}; */
@@ -329,7 +349,12 @@ const NavItem = styled.div`
             background-image: linear-gradient(160deg, #a54e07, #b47e11, #fef1a2, #bc881b, #a54e07);
         }
     }
-    &.logout{}
+    &.logout{
+        span{
+            color: red;
+            font-size: 14px;
+        }
+    }
 `
 const TopWrapper = styled.div`
     

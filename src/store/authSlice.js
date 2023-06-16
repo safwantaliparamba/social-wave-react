@@ -31,8 +31,9 @@ const initialState = {
     username: getItem("username"),
     sessionId: getItem("sessionId"),
     accessToken: getItem("accessToken"),
+    isProMember: getItem("isProMember") ?? false,
     refreshToken: getItem("refreshToken"),
-    isAuthenticated: getItem("isAuthenticated"),
+    isAuthenticated: getItem("isAuthenticated") ?? false,
 }
 
 
@@ -56,11 +57,18 @@ const authSlice = createSlice({
             }
         },
         editUserData: (state, { payload }) => {
-            const { name = state.name, email = state.email, username = state.username, sessionId = state.sessionId } = payload
+            const {
+                name = state.name,
+                email = state.email,
+                username = state.username,
+                sessionId = state.sessionId,
+                isProMember = state.isProMember,
+            } = payload
 
             setItem("name", name)
             setItem("email", email)
             setItem("username", username)
+            setItem("isProMember", isProMember)
             setItem("sessionId", sessionId)
 
             return { ...state, ...payload }

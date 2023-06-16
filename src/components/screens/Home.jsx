@@ -18,9 +18,6 @@ const Home = () => {
     return (
         <Wrapper>
             <h1>Home</h1>
-            <Link to='/sign-in'>Sign In</Link>
-            <Link to='/sign-up'>Sign Up</Link>
-            <Button onClick={() => logoutHandler(dispatch)}>Logout</Button>
         </Wrapper>
     )
 }
@@ -32,9 +29,10 @@ const Wrapper = styled.section`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
+    min-height: 100vh;
 
     h1{
         font-size: 28px;
+        color: #fff;
     }
 `
