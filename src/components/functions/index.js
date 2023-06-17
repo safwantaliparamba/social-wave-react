@@ -49,3 +49,13 @@ export function isPathnameEqual(string, pathname = location.pathname) {
     // Check if the trimmed pathname is equal to the provided string
     return trimmedPathname === string;
 }
+
+// Function to slice number
+export function sliceNumber(number = 0, maxLength = 99) {
+
+    if (+number > +maxLength) {
+        return `${maxLength}+`;
+    }
+    
+    return number.toString();
+}

@@ -31,8 +31,11 @@ const initialState = {
     username: getItem("username"),
     sessionId: getItem("sessionId"),
     accessToken: getItem("accessToken"),
+    isProMember: getItem("isProMember") ?? false,
     refreshToken: getItem("refreshToken"),
-    isAuthenticated: getItem("isAuthenticated"),
+    isAuthenticated: getItem("isAuthenticated") ?? false,
+    notificationCount: getItem("notificationCount") ?? 0,
+    bookmarkCount: getItem("bookmarkCount") ?? 0,
 }
 
 
@@ -41,27 +44,48 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, { payload }) => {
-            const { email, name, username, accessToken, refreshToken, sessionId } = payload
+            const { email,
+                name,
+                username,
+                accessToken,
+                refreshToken,
+                sessionId,
+                notificationCount,
+                bookmarkCount
+            } = payload
 
             setItem("name", name)
             setItem("email", email)
             setItem("username", username)
             setItem("sessionId", sessionId)
+            setItem("isAuthenticated", true)
             setItem("accessToken", accessToken)
             setItem("refreshToken", refreshToken)
-            setItem("isAuthenticated", true)
+            setItem("bookmarkCount", bookmarkCount)
+            setItem("notificationCount", notificationCount)
 
             return {
                 ...state, ...payload, isAuthenticated: true
             }
         },
         editUserData: (state, { payload }) => {
-            const { name = state.name, email = state.email, username = state.username, sessionId = state.sessionId } = payload
+            const {
+                name = state.name,
+                email = state.email,
+                username = state.username,
+                sessionId = state.sessionId,
+                isProMember = state.isProMember,
+                bookmarkCount = state.bookmarkCount,
+                notificationCount = state.notificationCount,
+            } = payload
 
             setItem("name", name)
             setItem("email", email)
             setItem("username", username)
             setItem("sessionId", sessionId)
+            setItem("isProMember", isProMember)
+            setItem("bookmarkCount", bookmarkCount)
+            setItem("notificationCount", notificationCount)
 
             return { ...state, ...payload }
         },
