@@ -31,6 +31,8 @@ const App = () => {
 						email: data.email,
 						username: data.username,
 						isProMember: data.is_pro_member,
+						bookmarkCount: data.bookmark_count,
+						notificationCount: data.notification_count,
 					}))
 				} else {
 					setExpired(true)

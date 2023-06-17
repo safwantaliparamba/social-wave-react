@@ -8,9 +8,19 @@ const useClickOutside = (handler = () => { }, parentRef = null) => {
     useEffect(() => {
 
         const eventHandler = (e) => {
-            if (!itemRef?.current?.contains(e.target) && !parentRef?.contains(e.target)) {
-                handler();
+
+            if (parentRef) {
+
+                if (!itemRef?.current?.contains(e?.target) && !parentRef?.contains(e?.target)) {
+                    handler();
+                }
+            } else {
+
+                if (!itemRef?.current?.contains(e?.target)) {
+                    handler();
+                }
             }
+
         }
 
         document.addEventListener('mousedown', eventHandler)

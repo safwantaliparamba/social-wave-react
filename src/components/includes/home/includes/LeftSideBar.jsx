@@ -24,7 +24,7 @@ import analyticsDark from "/icons/analytics-dark.svg"
 import analyticsLight from "/icons/analytics-light.svg"
 import notificationDark from "/icons/notification-dark.svg"
 import notificationLight from "/icons/notification-light.svg"
-import { isPathnameEqual, trimText } from "../../../functions"
+import { isPathnameEqual, sliceNumber, trimText } from "../../../functions"
 // import premiumLight from "/icons/premium-light.svg"
 // import premiumDark from "/icons/premium-dark.svg"
 
@@ -32,7 +32,7 @@ import { isPathnameEqual, trimText } from "../../../functions"
 const LeftSideBar = ({ }) => {
     // global states //
     const { theme } = useSelector(state => state.ui)
-    const { username, isProMember } = useSelector(state => state.auth)
+    const { username, isProMember, notificationCount, bookmarkCount } = useSelector(state => state.auth)
 
     // Hooks //
     const navigate = useNavigate()
@@ -69,7 +69,7 @@ const LeftSideBar = ({ }) => {
                 imgDark: notificationDark,
                 url: '/notification',
                 hasCount: true,
-                count: "99+"
+                count: sliceNumber(notificationCount)
             },
             {
                 id: nanoid(),
@@ -78,7 +78,7 @@ const LeftSideBar = ({ }) => {
                 imgDark: bookmarkDark,
                 url: '/bookmarks',
                 hasCount: true,
-                count: 4
+                count: sliceNumber(bookmarkCount)
             },
             {
                 id: nanoid(),
@@ -201,7 +201,7 @@ const LeftSideBar = ({ }) => {
 export default LeftSideBar
 
 const Container = styled.div`
-    width: 20%;
+    width: 18%;
     height: calc(100vh - 24px);
     display: flex;
     flex-direction: column;
@@ -212,7 +212,7 @@ const Container = styled.div`
     box-shadow: 0 0 10px rgba(0,0,0,0.2) inset;
     transition: all 0.4s ease-in-out;
     padding: 28px 0;
-    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#fff"};
+    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#a0a0a045"};
 `
 
 const Head = styled.header`
@@ -299,7 +299,7 @@ const NavItem = styled.div`
 
     &:hover, 
     &.active{
-        background: #8080801a;
+        background:  ${({ theme }) => theme === "DARK" ? "#8080801a" : "#fff"};
         border-color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#808080"};
     }
 
@@ -353,6 +353,7 @@ const NavItem = styled.div`
         span{
             color: red;
             font-size: 14px;
+            font-weight: 600;
         }
     }
 `

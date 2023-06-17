@@ -1,24 +1,19 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
-import { Button } from '../modals/auth/Emailverification'
-import { useDispatch } from 'react-redux'
-import { logout } from '../../store/authSlice'
-import { logoutHandler } from '../functions'
 
 
 const Home = () => {
-    const dispatch = useDispatch()
-    
-    // const logoutHandler = ()=>{
-    //     dispatch(logout())
-    // }
-    
 
     return (
-        <Wrapper>
-            <h1>Home</h1>
-        </Wrapper>
+        <>
+            <Helmet>
+                <title>Home | SocialWaves</title>
+            </Helmet>
+            <Wrapper>
+                <h1>Home</h1>
+            </Wrapper>
+        </>
     )
 }
 

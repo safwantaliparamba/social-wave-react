@@ -14,7 +14,7 @@ const RightSideBar = ({ }) => {
 export default RightSideBar
 
 const RightSideBarContainer = styled.div`
-    width: 25%;
+    width: 20%;
     margin: 12px;
     height: calc(100vh - 136px);
     margin-top: 0;
@@ -22,5 +22,5 @@ const RightSideBarContainer = styled.div`
     box-shadow: 0 0 10px rgba(0,0,0,0.2) inset;
     transition: all 0.5s ease-in-out;
     border: 1px solid ${({ theme }) => theme === "DARK" ? "rgb(38,39,42)" : "transparent"};
-    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#fff"};
+    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#a0a0a045"};
 `
