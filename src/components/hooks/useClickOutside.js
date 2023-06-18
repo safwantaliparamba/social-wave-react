@@ -2,15 +2,16 @@
 import { useEffect, useRef } from "react"
 
 
-const useClickOutside = (handler = () => { }, parentRef = null) => {
+const useClickOutside = (handler = () => { }, parentId="parent") => {
     const itemRef = useRef()
+
+    const parentRef = document.getElementById(parentId) ?? null
 
     useEffect(() => {
 
         const eventHandler = (e) => {
 
             if (parentRef) {
-
                 if (!itemRef?.current?.contains(e?.target) && !parentRef?.contains(e?.target)) {
                     handler();
                 }
