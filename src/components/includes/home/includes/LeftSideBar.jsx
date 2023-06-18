@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom"
 import Logo from "../../Logo"
 import SilentLink from "../../SilentLink"
 import homeDark from "/icons/home-dark.svg"
+import plusDark from "/icons/plus-dark.svg"
+import plusLight from "/icons/plus-light.svg"
 import homeLight from "/icons/home-light.svg"
 import profile from "/images/profile-demo.jpg"
 import logoutRed from "/icons/logout-red.svg"
@@ -24,15 +26,19 @@ import analyticsDark from "/icons/analytics-dark.svg"
 import analyticsLight from "/icons/analytics-light.svg"
 import notificationDark from "/icons/notification-dark.svg"
 import notificationLight from "/icons/notification-light.svg"
-import { isPathnameEqual, sliceNumber, trimText } from "../../../functions"
 // import premiumLight from "/icons/premium-light.svg"
 // import premiumDark from "/icons/premium-dark.svg"
+import useClickOutside from "../../../hooks/useClickOutside"
+import { isPathnameEqual, sliceNumber, trimText } from "../../../functions"
 
 
 const LeftSideBar = ({ }) => {
     // global states //
     const { theme } = useSelector(state => state.ui)
     const { username, isProMember, notificationCount, bookmarkCount } = useSelector(state => state.auth)
+
+    // Local states
+    const [isAccountModalOpen, setAccount] = useState(false)
 
     // Hooks //
     const navigate = useNavigate()
@@ -124,6 +130,54 @@ const LeftSideBar = ({ }) => {
 
     }, [])
 
+    const sessions = useMemo(() => (
+        [
+            {
+                id: nanoid(),
+                username: username,
+                profileImg: profile,
+            },
+        ]
+    ), [])
+
+    const toggleDropdown = () => setAccount(false)
+
+    // custom hooks //
+    const accountModalRef = useClickOutside(toggleDropdown, "accountModalParent")
+
+
+    const AccountsModal = () => {
+        const handler = (userName = "") => {
+            if (userName === username) {
+                navigate(`/${username}`)
+                
+                return 
+            }
+            // other session login handler
+        }
+
+        return (
+            <ModalWrapper ref={accountModalRef}>
+                {sessions.map(session => (
+                    <ModalItem theme={theme} key={session.id} onClick={() => handler(session.username)}>
+                        <div className="wrapper">
+                            <img className="profile" src={session.profileImg} alt="" />
+                            <span>{trimText(session.username, 18)}</span>
+                        </div>
+                    </ModalItem>
+                ))}
+                <AddNew theme={theme}>
+                    <div className="wrapper" onClick={e => navigate('/sign-in')}>
+                        <div className="img-wrapper">
+                            <img className="profile" src={theme === "DARK" ? plusLight : plusDark} alt="" />
+                        </div>
+                        <span>Add new </span>
+                    </div>
+                </AddNew>
+            </ModalWrapper>
+        )
+    }
+
 
     return (
         <Container theme={theme}>
@@ -135,13 +189,31 @@ const LeftSideBar = ({ }) => {
                 </Head>
                 <Nav>
                     <Profile theme={theme}>
-                        <div className="wrapper" onClick={e => navigate(`/${username}`)}>
-                            <img className="profile" src={profile} alt="" />
+                        <div
+                            className="wrapper"
+                            onClick={e => navigate(`/${username}`)}
+                        >
+                            <img
+                                className="profile"
+                                src={profile}
+                                alt=""
+                            />
                             <span>{trimText(username, 14)}</span>
                         </div>
-                        <div className="dropdown-wrapper">
-                            <img className="dropdown" src={theme === "DARK" ? dropdownLigh : dropdownDark} alt="" />
+                        <div
+                            className="dropdown-wrapper"
+                            onClick={() => setAccount(!isAccountModalOpen)}
+                            id="accountModalParent"
+                        >
+                            <img
+                                className="dropdown"
+                                src={theme === "DARK" ? dropdownLigh : dropdownDark}
+                                alt=""
+                            />
                         </div>
+                        {isAccountModalOpen && (
+                            <AccountsModal />
+                        )}
                     </Profile>
                     {
                         navItems.map(nav => (
@@ -212,7 +284,8 @@ const Container = styled.div`
     box-shadow: 0 0 10px rgba(0,0,0,0.2) inset;
     transition: all 0.4s ease-in-out;
     padding: 28px 0;
-    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#a0a0a045"};
+    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#00b90214"};
+    /* background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#a0a0a045"}; */
 `
 
 const Head = styled.header`
@@ -224,16 +297,19 @@ const Nav = styled.nav`
     display: flex;
     flex-direction: column;
     gap: 8px;
+    z-index: 1;
 `
 
 const Profile = styled.div`
     display: flex;
+    z-index: 5;
     align-items: center;
     justify-content: space-between;
     padding: 12px 26px ;
     gap: 4px;
     user-select: none;
     margin-bottom: 24px;
+    position: relative;
 
     .wrapper{
         display: flex;
@@ -363,4 +439,57 @@ const TopWrapper = styled.div`
 
 const BottomWrapper = styled(Nav)`
     
+`
+
+///////////  Accounts Modal ////////////
+
+const ModalWrapper = styled.div`
+    position: absolute;
+    width: 94%;
+    border-radius: 18px;
+    top: 60px;
+    left: 3%;
+    padding: 12px;
+    background: rgb(27 28 31);
+    border: 1px solid #d9d7d7;
+    /* border-radius: 20%; */
+    /* transition: border 0.3s ease-in-out; */
+    z-index: 10;
+`
+
+const ModalItem = styled(Profile)`
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1px;
+    z-index: 10;
+    /* background-color: inhe; */
+
+    .wrapper{
+        margin: 0 ;
+        /* padding: 0; */
+        span{
+            font-size: 14px;
+            flex: 1;
+        }
+    }
+
+    &:last-child{
+        margin-bottom: 0;
+    }
+`
+
+const AddNew = styled(ModalItem)`
+    .wrapper .img-wrapper{
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #fff;
+        border-radius: 50%;
+
+        img{
+            width: 15px;
+        }
+    }
 `

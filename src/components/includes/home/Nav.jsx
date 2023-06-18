@@ -52,8 +52,8 @@ const HomeWrapper = styled.div`
 `
 
 const Home = styled.div`
-    min-height: calc(100vh - 136px);
-    max-height: calc(100vh - 136px);
+    min-height: calc(100vh - 118px);
+    max-height: calc(100vh - 118px);
     /* width: 78%; */
     width: 100%;
     margin-bottom: 12px;
