@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import { styled } from "styled-components"
 import { nanoid } from "@reduxjs/toolkit"
 import { useNavigate } from "react-router-dom"
+import useClickOutside from "react-use-click-outside-hook"
 
 import Logo from "../../Logo"
 import SilentLink from "../../SilentLink"
@@ -28,7 +29,7 @@ import notificationDark from "/icons/notification-dark.svg"
 import notificationLight from "/icons/notification-light.svg"
 // import premiumLight from "/icons/premium-light.svg"
 // import premiumDark from "/icons/premium-dark.svg"
-import useClickOutside from "../../../hooks/useClickOutside"
+// import useClickOutside from "../../../hooks/useClickOutside"
 import { isPathnameEqual, sliceNumber, trimText } from "../../../functions"
 
 
@@ -139,6 +140,8 @@ const LeftSideBar = ({ }) => {
             },
         ]
     ), [])
+
+    
 
     const toggleDropdown = () => setAccount(false)
 
