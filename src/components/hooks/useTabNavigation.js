@@ -3,13 +3,7 @@ import { useEffect } from 'react'
 const useTabNavigation = (className = "focusable" ) => {
 
     useEffect(() => {
-        // const searchInput = document.getElementById("search-input")
         const handleKeyDown = (event) => {
-
-            // if (event.key === "/" && document.activeElement !== searchInput) {
-            //     event.preventDefault()
-            //     setActive(true)
-            // }
 
             if (event.key === 'Tab') {
                 event.preventDefault();
