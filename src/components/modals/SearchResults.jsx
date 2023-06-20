@@ -6,13 +6,11 @@ import useClickOutside from 'react-use-click-outside-hook'
 import Loader from '../includes/loaders/Loader'
 
 
-const SearchResults = ({
-    closeHandler = () => { },
-    isLoading = false,
-    users = [],
-}) => {
+const SearchResults = ({ closeHandler = () => { }, isLoading = false, users = [] }) => {
+    // Global state
     const { theme } = useSelector(state => state.ui)
 
+    // Third party hooks
     const modalRef = useClickOutside(closeHandler, "search-input")
 
     return (
@@ -31,20 +29,23 @@ const SearchResults = ({
                                 tabIndex={0}
                                 onKeyDown={e => {
                                     if (e.key === "Enter") {
-                                        console.log(user.id);
+                                        // console.log(user.id);
                                     }
                                 }}
                             >
                                 <LeftContainer>
                                     <img src={user.image} alt="user-profile" />
-                                    <span>{user.username}</span>
+                                    <div className="details">
+                                        <span className='name'>{user.username}</span>
+                                        <span className="username">@{user.username}</span>
+                                    </div>
                                 </LeftContainer>
                                 <FollowButton
-                                    className='focusable'
+                                    className={['focusable ', user.isFollowing ? " unfollow " : ""]}
                                     tabIndex={0}
                                     onClick={e => {
                                         e.stopPropagation()
-                                        console.log(`following ${user.username}`);
+                                        // console.log(`following ${user.username}`);
                                     }}
                                 >
                                     {user.isFollowing ? "Unfollow" : "Follow"}
@@ -97,9 +98,9 @@ const UserContainer = styled.div`
     cursor: pointer;
     border: 1px solid transparent;
 
-    &:active, &:focus-within{
+    &:active, &:focus-within, &:hover{
+        /* border-color:#8080805d; */
         background-color:#212121;
-        border-color:#8080805d;
     }
 `
 const LeftContainer = styled.div`
@@ -111,9 +112,16 @@ const LeftContainer = styled.div`
         width: 35px;
         border-radius: 50%;
     }
-    span{
-        font-size: 14px;
-        color: #808080;
+    .details{
+        display: flex;
+        flex-direction: column;
+        span.username{
+            font-size: 14px;
+            color: #808080;
+        }
+        span.name{
+            font-size: 16px;
+        }
     }
 `
 const FollowButton = styled.button`
@@ -124,8 +132,17 @@ const FollowButton = styled.button`
     font-weight: 600;
     border-radius: 9px;
 
+    &.unfollow{
+        border-color: #ff4b4b;
+        color: #ff4b4b;
+    }
+
     &:focus{
         background-color: #7d67ff;
         color: #fff;
+
+        &.unfollow{
+            background-color: #ff4b4b;
+        }
     }
 `

@@ -9,6 +9,7 @@ import profile from "/images/profile-demo.jpg"
 import searchDark from "/icons/search-dark.svg"
 import searchLight from "/icons/search-light.svg"
 import SearchResults from "../../../modals/SearchResults"
+import useTabNavigation from "../../../hooks/useTabNavigation"
 
 
 const Header = ({ }) => {
@@ -77,7 +78,7 @@ const Header = ({ }) => {
     ])
 
     // hooks
-    const elements = useRef([])
+    useTabNavigation("focusable")
 
     // functions
     const SearchHandler = () => {
@@ -87,54 +88,10 @@ const Header = ({ }) => {
     // Effects 
     useEffect(() => {
         const searchInput = document.getElementById("search-input")
-
-        const keyListener = (e) => {
-
-            if (e.key === "/" && document.activeElement !== searchInput) {
-                e.preventDefault()
-                setActive(true)
-            }
-        }
-        document.addEventListener("keydown", keyListener)
-
-        return () => {
-            document.removeEventListener("keydown", keyListener)
-        }
-    }, [])
-
-    useEffect(() => {
         const handleKeyDown = (event) => {
-            //   if (event.key === 'Tab') {
-            //     event.preventDefault();
-
-            //     const elements = document.querySelectorAll('.focusable');
-            //     const currentIndex = Array.from(elements).findIndex((el) =>
-            //       el === document.activeElement
-            //     );
-
-            //     if (currentIndex !== -1) {
-            //       const nextIndex = (currentIndex + 1) % elements.length;
-            //       elements[nextIndex].focus();
-            //     }
-            //   }
-            if (event.key === 'Tab') {
-                event.preventDefault();
-
-                const elements = document.querySelectorAll('.focusable');
-                const currentIndex = Array.from(elements).findIndex((el) =>
-                    el === document.activeElement
-                );
-
-                let nextIndex;
-                if (event.shiftKey) {
-                    // Reverse tab navigation
-                    nextIndex = currentIndex === 0 ? elements.length - 1 : currentIndex - 1;
-                } else {
-                    // Forward tab navigation
-                    nextIndex = (currentIndex + 1) % elements.length;
-                }
-
-                elements[nextIndex].focus();
+            if (event.key === "/" && document.activeElement !== searchInput) {
+                event.preventDefault()
+                setActive(true)
             }
         };
 
@@ -161,8 +118,6 @@ const Header = ({ }) => {
                         <input
                             type="text"
                             tabIndex={0}
-                            // ref={addElement}
-                            // onKeyDown={e => handleKeyDown(e,0)}
                             autoFocus
                             onChange={onSearchChange}
                             value={searchInput}
