@@ -5,13 +5,16 @@ import { Route, Routes } from "react-router-dom";
 // local imports 
 import Home from '../../screens/Home';
 import Nav from '../../includes/home/Nav';
+import Settings from '../../screens/Settings';
 
 
 const AppRouter = () => {
     return (
         <Nav>
             <Routes>
-                <Route index element={<Home />} />
+                <Route path='' element={<Home />}>
+                    <Route path="settings/" element={<Settings />} />
+                </Route>
             </Routes>
         </Nav>
     )

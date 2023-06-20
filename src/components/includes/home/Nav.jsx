@@ -5,17 +5,11 @@ import { styled } from 'styled-components'
 
 import Header from './includes/Header'
 import LeftSideBar from './includes/LeftSideBar'
-import RightSideBar from './includes/RightSideBar'
+// import RightSideBar from './includes/RightSideBar'
 
 
 const Nav = ({ children }) => {
     const { theme } = useSelector(state => state.ui)
-
-    window.addEventListener("beforeunload",(e)=>{
-        e.preventDefault()
-        
-        console.log('tried to close the tab');
-    })
 
     return (
         <MainWrapper theme={theme}>
@@ -62,5 +56,6 @@ const Home = styled.div`
     box-shadow: 0 0 10px rgba(0,0,0,0.2) inset;
     transition: all 0.5s ease-in-out;
     border: 1px solid ${({theme}) => theme === "DARK" ? "rgb(38,39,42)": "transparent"};
-    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#a0a0a045"};
+    background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#00b90214"};
+    /* background-color: ${({ theme }) => theme === "DARK" ? "rgb(27 28 31)" : "#a0a0a045"}; */
 `

@@ -1851,6 +1851,11 @@ react-side-effect@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-2.1.2.tgz#dc6345b9e8f9906dc2eeb68700b615e0b4fe752a"
   integrity sha512-PVjOcvVOyIILrYoyGEpDN3vmYNLdy1CajSFNt4TDsVQC5KpTijDvWVoR+/7Rz2xT978D8/ZtFceXxzsPwZEDvw==
 
+react-use-click-outside-hook@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-use-click-outside-hook/-/react-use-click-outside-hook-1.6.0.tgz#4f6c3d6726dc28a6c10a5c55fd4b665d86a2005e"
+  integrity sha512-PKmue1tktpCFsdm9+vf7v5dVtWwiKmLcFchqnQ1GPxLWGNVkXMzQuyBVxoTxo/+CtbOf+H4Z+FXTqD/NVpzMZQ==
+
 react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
