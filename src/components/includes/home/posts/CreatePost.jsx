@@ -69,7 +69,6 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
     width: 70%;
-    background-color: #0F0F0F;
     border-radius: 18px;
     background-color: ${({ theme }) => theme === "DARK" ? "rgb(22 22 25)" : "#fff"};
     border: 1px solid ${({ theme }) => theme === "DARK" ? "rgb(38,39,42)" : "transparent"};
