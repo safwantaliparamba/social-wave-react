@@ -6,7 +6,7 @@ import useHandleScroll from "../../hooks/useHandleScroll";
 const portalElement = document.getElementById("modal")
 
 
-const ModalWrapper = ({ children, onClose }) => {
+const ModalWrapper = ({ children, onClose = () => { } }) => {
     return (
         <Wrapper onClick={onClose}>
             {children}

@@ -131,13 +131,14 @@ const FollowButton = styled.button`
     color: #7d67ff;
     font-weight: 600;
     border-radius: 9px;
+    transition: all 0.3s ease-in-out;
 
     &.unfollow{
         border-color: #ff4b4b;
         color: #ff4b4b;
     }
 
-    &:focus{
+    &:focus, &:hover{
         background-color: #7d67ff;
         color: #fff;
 

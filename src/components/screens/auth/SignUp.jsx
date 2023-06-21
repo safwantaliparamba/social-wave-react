@@ -39,13 +39,13 @@ const SignUp = ({ type = "SIGNUP" }) => {
 		name: "",
 		email: "",
 		password: "",
-		confirmPassword: "",
+		confirm_password: "",
 	}
 	// -------local state-------
 	const [inputs, setInputs] = useState({ ...initialInputs })
 	const [isShow, setShow] = useState({
 		password: false,
-		confirmPassword: false,
+		confirm_password: false,
 	})
 	const [errorMessage, setErrorMessage] = useState("")
 	const [isError, setError] = useState("") // "active" or "close"
@@ -93,13 +93,14 @@ const SignUp = ({ type = "SIGNUP" }) => {
 	}
 
 	const validate = () => {
+		console.log(inputs);
 
 		if (type === "SIGNUP") {
 			// signup error validation
 			if (inputs.name.length < 6) {
 				return setErrors("Please ensure name has atleast 6 characters")
 			}
-			if (inputs.password !== inputs.confirmPassword) {
+			if (inputs.password != inputs.confirm_password) {
 				return setErrors("Entered passwords are not equal")
 			}
 		}
@@ -284,16 +285,16 @@ const SignUp = ({ type = "SIGNUP" }) => {
 							{type === "SIGNUP" && (
 								<InputContainer>
 									<input
-										type={!isShow.confirmPassword ? "password" : "text"}
-										name="confirmPassword"
+										type={!isShow.confirm_password ? "password" : "text"}
+										name="confirm_password"
 										placeholder="Confirm Password"
 										onChange={onChange}
-										value={inputs.confirmPassword}
+										value={inputs.confirm_password}
 									/>
 									<img
-										src={isShow.confirmPassword ? eyeIcon : hideIcon}
+										src={isShow.confirm_password ? eyeIcon : hideIcon}
 										alt="toggle password"
-										onClick={() => togglePasswordType("confirmPassword")}
+										onClick={() => togglePasswordType("confirm_password")}
 									/>
 								</InputContainer>
 							)}
