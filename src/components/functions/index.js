@@ -3,8 +3,7 @@ import useAuthApi from "../hooks/useAuthApi"
 
 
 //logout method
-export const logoutHandler = (dispatch) => {
-    const { authApi } = useAuthApi()
+export const logoutHandler = (dispatch, authApi) => {
     const sessionId = getItem("sessionId")
 
     authApi

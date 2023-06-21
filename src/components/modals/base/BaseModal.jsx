@@ -6,7 +6,7 @@ import useHandleScroll from "../../hooks/useHandleScroll";
 const portalElement = document.getElementById("modal")
 
 
-const ModalWrapper = ({ children, onClose }) => {
+const ModalWrapper = ({ children, onClose = () => { } }) => {
     return (
         <Wrapper onClick={onClose}>
             {children}
@@ -37,6 +37,6 @@ const Wrapper = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #534e4e34;
+    background: #534e4e76;
     z-index: 10;
 `

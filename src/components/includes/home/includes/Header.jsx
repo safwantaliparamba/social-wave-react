@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { useSelector } from "react-redux"
 import { nanoid } from "@reduxjs/toolkit"
@@ -9,6 +9,7 @@ import profile from "/images/profile-demo.jpg"
 import searchDark from "/icons/search-dark.svg"
 import searchLight from "/icons/search-light.svg"
 import SearchResults from "../../../modals/SearchResults"
+import useTabNavigation from "../../../hooks/useTabNavigation"
 
 
 const Header = ({ }) => {
@@ -18,34 +19,66 @@ const Header = ({ }) => {
     // Local State
     const [isActive, setActive] = useState(false)
     const [searchInput, setSearch] = useState("")
-    const [isLoading, setLoading] = useState(true)
+    const [isLoading, setLoading] = useState(false)
     const [results, setResults] = useState([
         {
             id: nanoid(),
             username: "safwantaliparamba",
             image: profile,
+            isFollowing: false,
         },
         {
             id: nanoid(),
             username: "hiyas_usman",
             image: profile,
+            isFollowing: false,
         },
         {
             id: nanoid(),
             username: "monkey_d_luffy",
             image: profile,
+            isFollowing: true,
         },
         {
             id: nanoid(),
-            username: "",
+            username: "Zoro",
             image: profile,
+            isFollowing: false,
+        },
+        {
+            id: nanoid(),
+            username: "Sanji",
+            image: profile,
+            isFollowing: true,
+        },
+        {
+            id: nanoid(),
+            username: "hiyas_usman",
+            image: profile,
+            isFollowing: false,
         },
         {
             id: nanoid(),
             username: "monkey_d_luffy",
             image: profile,
+            isFollowing: true,
+        },
+        {
+            id: nanoid(),
+            username: "Zoro",
+            image: profile,
+            isFollowing: false,
+        },
+        {
+            id: nanoid(),
+            username: "Sanji",
+            image: profile,
+            isFollowing: true,
         },
     ])
+
+    // hooks
+    useTabNavigation("focusable")
 
     // functions
     const SearchHandler = () => {
@@ -55,47 +88,54 @@ const Header = ({ }) => {
     // Effects 
     useEffect(() => {
         const searchInput = document.getElementById("search-input")
-
-        const keyListener = (e) => {
-
-            if (e.key === "/" && document.activeElement !== searchInput) {
-                e.preventDefault()
+        const handleKeyDown = (event) => {
+            if (event.key === "/" && document.activeElement !== searchInput) {
+                event.preventDefault()
                 setActive(true)
             }
-        }
-        document.addEventListener("keydown", keyListener)
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
 
         return () => {
-            document.removeEventListener("keydown", keyListener)
-        }
-    }, [])
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
-    const modalCloseHandler = () => {
-        setActive(false)
-    }
+    const modalCloseHandler = () => setActive(false)
 
-    const onSearchChange = (e) => {
-        setSearch(e.target.value)
-    }
+    const onSearchChange = (e) => setSearch(e.target.value)
 
     return (
         <HeaderContainer theme={theme}>
             <LeftContainer>
-                <SearchBar theme={theme} className={isActive ? "active" : ""}>
+                <SearchBar
+                    theme={theme}
+                    className={isActive ? "active" : ""}
+                    id="search-input"
+                >
                     {isActive ? (
                         <input
                             type="text"
+                            tabIndex={0}
                             autoFocus
-                            id="search-input"
                             onChange={onSearchChange}
                             value={searchInput}
                             placeholder='Search creators..'
+                            className="focusable"
                         />
                     ) : (
-                        <span onClick={e => setActive(!isActive)}>Enter <kbd>/</kbd> to search</span>
+                        <span
+                            onClick={e => setActive(!isActive)}
+                        >
+                            Enter <kbd>/</kbd> to search
+                        </span>
                     )}
                     <button onClick={SearchHandler}>
-                        <img src={theme === "DARK" ? searchLight : searchDark} alt="" />
+                        <img
+                            src={theme === "DARK" ? searchLight : searchDark}
+                            alt=""
+                        />
                     </button>
                     {isActive && (
                         <SearchResults

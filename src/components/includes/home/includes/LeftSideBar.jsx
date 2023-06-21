@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { styled } from "styled-components"
 import { nanoid } from "@reduxjs/toolkit"
 import { useNavigate } from "react-router-dom"
@@ -30,7 +30,8 @@ import notificationLight from "/icons/notification-light.svg"
 // import premiumLight from "/icons/premium-light.svg"
 // import premiumDark from "/icons/premium-dark.svg"
 // import useClickOutside from "../../../hooks/useClickOutside"
-import { isPathnameEqual, sliceNumber, trimText } from "../../../functions"
+import { isPathnameEqual, logoutHandler, sliceNumber, trimText } from "../../../functions"
+import useAuthApi from "../../../hooks/useAuthApi"
 
 
 const LeftSideBar = ({ }) => {
@@ -42,7 +43,10 @@ const LeftSideBar = ({ }) => {
     const [isAccountModalOpen, setAccount] = useState(false)
 
     // Hooks //
+    const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    const { authApi } = useAuthApi()
 
     // Local variables
     const buyPremiumHandler = () => {
@@ -50,7 +54,7 @@ const LeftSideBar = ({ }) => {
     }
 
     const LogoutHandler = () => {
-        console.log("logout");
+        logoutHandler(dispatch,authApi)
     }
 
     const navItems = useMemo(() => (
@@ -141,7 +145,7 @@ const LeftSideBar = ({ }) => {
         ]
     ), [])
 
-    
+
 
     const toggleDropdown = () => setAccount(false)
 
@@ -153,8 +157,8 @@ const LeftSideBar = ({ }) => {
         const handler = (userName = "") => {
             if (userName === username) {
                 navigate(`/${username}`)
-                
-                return 
+
+                return
             }
             // other session login handler
         }
