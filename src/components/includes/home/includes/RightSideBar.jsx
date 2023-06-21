@@ -4,6 +4,7 @@ import { styled } from "styled-components"
 
 const RightSideBar = ({ }) => {
     const { theme } = useSelector(state => state.ui)
+    
     return (
         <RightSideBarContainer theme={theme}>
 
