@@ -1,5 +1,4 @@
-import { getItem, logout } from "../../store/authSlice"
-import useAuthApi from "../hooks/useAuthApi"
+import { logout } from "../../store/authSlice"
 
 
 //logout method
@@ -55,6 +54,36 @@ export function sliceNumber(number = 0, maxLength = 99) {
     if (+number > +maxLength) {
         return `${maxLength}+`;
     }
-    
+
     return number.toString();
+}
+
+// get item from localStorage
+export const getItem = (title = "", json = false) => {
+    const item = localStorage.getItem(title)
+
+    if (item?.toLowerCase() === "true") {
+        return true;
+    } else if (item?.toLowerCase() === "false") {
+        return false;
+    } else if (item === "null") {
+        return null;
+    } else if (item === "undefined") {
+        return undefined;
+    } else if (json) {
+        return JSON.parse(item)
+    }
+
+    return item
+}
+
+// set item to localStorage
+export const setItem = (title = "", item = "", json=false) => {
+
+    if (json){
+        localStorage.setItem(title, JSON.stringify(item));
+    }
+    localStorage.setItem(title, item);
+
+    return true
 }

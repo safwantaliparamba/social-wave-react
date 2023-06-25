@@ -1,6 +1,6 @@
 import axios from "axios"
-import { getItem } from "../../store/authSlice"
 import { useEffect } from "react"
+import { getItem } from "../functions"
 
 
 const URL = "http://localhost:8000/api/v1"
