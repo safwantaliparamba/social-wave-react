@@ -128,21 +128,22 @@ const SignUp = ({ type = "SIGNUP" }) => {
 				return
 			}
 
-			const params = { ...inputs, session_id: sessionId }
 			loginApi
-				.post("/accounts/sign-in/", params, {
+				.post("/accounts/sign-in/", { ...inputs }, {
 					signal: loginAborter.signal,
 				})
 				.then((res) => {
 					const { statusCode, data } = res.data
 
 					if (statusCode === 6000) {
+
 						dispatch(login({
-							name: data.name ?? "",
+							name: data.name,
 							email: data.email,
+							image: data.image,
+							username: data.username,
 							accessToken: data.access,
 							refreshToken: data.refresh,
-							username: data.username ?? "",
 							sessionId: data.session_id,
 						}))
 						const next = searchParams.get("next")

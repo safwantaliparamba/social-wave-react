@@ -15,12 +15,18 @@ const useAuthApi = () => {
     // middleware to add accessToken as auth credential
     authApi.interceptors.request.use((request) => {
         // get access token which we stored in localStorage
-        const sessionId = getItem("sessionId")
-        const accessToken = getItem("accessToken");
+
+        const activeIndex = getItem("activeIndex");
+        const sessions = JSON.parse(getItem("sessions"));
+
+        const activeSession = sessions[activeIndex];
+
+        const sessionId = activeSession?.sessionId
+        const accessToken = activeSession?.accessToken
 
         request = {
-            ...request, 
-            headers:{
+            ...request,
+            headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
             signal: controller.signal,
@@ -29,7 +35,7 @@ const useAuthApi = () => {
             },
         }
 
-        if (controller.signal.aborted){
+        if (controller.signal.aborted) {
             console.log("aborted");
 
             // return 

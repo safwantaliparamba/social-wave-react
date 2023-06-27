@@ -3,7 +3,10 @@ import { logout } from "../../store/authSlice"
 
 //logout method
 export const logoutHandler = (dispatch, authApi) => {
-    const sessionId = getItem("sessionId")
+    const activeIndex = getItem("activeIndex")
+    const sessions = JSON.parse(getItem("sessions"))
+
+    const sessionId = sessions[activeIndex].sessionId
 
     authApi
         .post(`/accounts/sign-out/${sessionId}/`)
@@ -62,6 +65,9 @@ export function sliceNumber(number = 0, maxLength = 99) {
 export const getItem = (title = "", json = false) => {
     const item = localStorage.getItem(title)
 
+    if (json) {
+        return JSON.parse(item)
+    }
     if (item?.toLowerCase() === "true") {
         return true;
     } else if (item?.toLowerCase() === "false") {
@@ -70,20 +76,25 @@ export const getItem = (title = "", json = false) => {
         return null;
     } else if (item === "undefined") {
         return undefined;
-    } else if (json) {
-        return JSON.parse(item)
     }
 
     return item
 }
 
 // set item to localStorage
-export const setItem = (title = "", item = "", json=false) => {
+export const setItem = (title = "", item = "", json = false) => {
 
-    if (json){
+    if (json) {
+        console.log(JSON.stringify(item));
         localStorage.setItem(title, JSON.stringify(item));
     }
     localStorage.setItem(title, item);
 
     return true
+}
+
+export const getCurrentSession = (useSelector) => {
+    const { activeIndex, sessions } = useSelector(state => state.auth)
+
+    return sessions[activeIndex]
 }
