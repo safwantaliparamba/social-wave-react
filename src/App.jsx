@@ -12,12 +12,14 @@ import SessionExpired from './components/modals/auth/SessionExpired';
 export const env = import.meta.env
 
 const App = () => {
+	// hooks
 	const dispatch = useDispatch()
 	const { authApi, controller } = useAuthApi()
 	// global state
-	const { isAuthenticated } = useSelector(state => state.auth)
+	const { isAuthenticated,activeIndex } = useSelector(state => state?.auth)
 	// local state
 	const [isSessionExpired, setExpired] = useState(false)
+
 	// functions
 	const validateUser = () => {
 		authApi
@@ -29,6 +31,7 @@ const App = () => {
 					dispatch(editUserData({
 						name: data.name,
 						email: data.email,
+						image: data.image,
 						username: data.username,
 						isProMember: data.is_pro_member,
 						bookmarkCount: data.bookmark_count,
@@ -39,7 +42,7 @@ const App = () => {
 				}
 			})
 			.catch(e => {
-				if (e.response.status === 401) {
+				if (e?.response?.status === 401) {
 					setExpired(true)
 				}
 			})
@@ -53,7 +56,7 @@ const App = () => {
 		return () => {
 			controller.abort()
 		}
-	}, [])
+	}, [activeIndex])
 
 	return (
 		<>

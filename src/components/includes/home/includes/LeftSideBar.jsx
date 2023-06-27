@@ -27,17 +27,18 @@ import analyticsDark from "/icons/analytics-dark.svg"
 import analyticsLight from "/icons/analytics-light.svg"
 import notificationDark from "/icons/notification-dark.svg"
 import notificationLight from "/icons/notification-light.svg"
-// import premiumLight from "/icons/premium-light.svg"
-// import premiumDark from "/icons/premium-dark.svg"
-// import useClickOutside from "../../../hooks/useClickOutside"
 import { isPathnameEqual, logoutHandler, sliceNumber, trimText } from "../../../functions"
 import useAuthApi from "../../../hooks/useAuthApi"
+import { switchAccount } from "../../../../store/authSlice"
 
 
 const LeftSideBar = ({ }) => {
     // global states //
     const { theme } = useSelector(state => state.ui)
-    const { username, isProMember, notificationCount, bookmarkCount } = useSelector(state => state.auth)
+    const { sessions, activeIndex } = useSelector(state => state.auth)
+
+    const activeSession = sessions[activeIndex]
+    const { username, email, isProMember, notificationCount, bookmarkCount } = activeSession
 
     // Local states
     const [isAccountModalOpen, setAccount] = useState(false)
@@ -54,7 +55,7 @@ const LeftSideBar = ({ }) => {
     }
 
     const LogoutHandler = () => {
-        logoutHandler(dispatch,authApi)
+        logoutHandler(dispatch, authApi)
     }
 
     const navItems = useMemo(() => (
@@ -135,44 +136,50 @@ const LeftSideBar = ({ }) => {
 
     }, [])
 
-    const sessions = useMemo(() => (
-        [
-            {
-                id: nanoid(),
-                username: username,
-                profileImg: profile,
-            },
-        ]
-    ), [])
-
-
-
     const toggleDropdown = () => setAccount(false)
 
     // custom hooks //
     const accountModalRef = useClickOutside(toggleDropdown, "accountModalParent")
 
 
-    const AccountsModal = () => {
-        const handler = (userName = "") => {
-            if (userName === username) {
+    const AccountsModal = ({ }) => {
+
+        const handler = (Email = "") => {
+            console.log(Email);
+
+            if (Email === email) {
                 navigate(`/${username}`)
 
                 return
+            } else {
+                dispatch(switchAccount({ email:Email }))
+                navigate("/")
+                toggleDropdown()
             }
-            // other session login handler
         }
 
         return (
             <ModalWrapper ref={accountModalRef}>
-                {sessions.map(session => (
-                    <ModalItem theme={theme} key={session.id} onClick={() => handler(session.username)}>
-                        <div className="wrapper">
-                            <img className="profile" src={session.profileImg} alt="" />
-                            <span>{trimText(session.username, 18)}</span>
-                        </div>
-                    </ModalItem>
-                ))}
+                {
+                    sessions
+                        ?.map((session) => (
+                            <ModalItem
+                                theme={theme}
+                                key={session.sessionId}
+                                onClick={() => handler(session.email)}
+                            >
+                                <div className="wrapper">
+                                    <img
+                                        loading="lazy"
+                                        className="profile"
+                                        src={session.image}
+                                        alt=""
+                                    />
+                                    <span>{trimText(session.username, 18)}</span>
+                                </div>
+                            </ModalItem>
+                        ))
+                }
                 <AddNew theme={theme}>
                     <div className="wrapper" onClick={e => navigate('/sign-in')}>
                         <div className="img-wrapper">
@@ -202,7 +209,7 @@ const LeftSideBar = ({ }) => {
                         >
                             <img
                                 className="profile"
-                                src={profile}
+                                src={activeSession.image}
                                 alt=""
                             />
                             <span>{trimText(username, 14)}</span>
