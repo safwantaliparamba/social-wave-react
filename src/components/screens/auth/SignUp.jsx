@@ -7,7 +7,6 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 // import tickIcon from '../../../assets/icons/tick.svg'
 import Logo from '../../includes/Logo'
-import useApi from '../../hooks/useApi'
 import { login } from '../../../store/authSlice'
 import SilentLink from '../../includes/SilentLink'
 import eyeIcon from '../../../assets/icons/eye.svg'
@@ -17,6 +16,7 @@ import closeIcon from '../../../assets/icons/close.svg'
 import hideIcon from '../../../assets/icons/hide-eye.svg'
 import googleLogo from '../../../assets/images/google-logo.svg'
 import Emailverification from '../../modals/auth/Emailverification'
+import useApi from '../../hooks/useApi'
 
 
 const SignUp = ({ type = "SIGNUP" }) => {
