@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import './assets/css/style.css';
 import { editUserData } from './store/authSlice';
-import useAuthApi from './components/hooks/useAuthApi';
 import MainRouter from './components/routers/router/MainRouter';
 import SessionExpired from './components/modals/auth/SessionExpired';
+import useApi from './components/hooks/useApi';
 
 
 export const env = import.meta.env
@@ -14,7 +14,7 @@ export const env = import.meta.env
 const App = () => {
 	// hooks
 	const dispatch = useDispatch()
-	const { authApi, controller } = useAuthApi()
+	const { api, controller } = useApi(true)
 	// global state
 	const { isAuthenticated,activeIndex } = useSelector(state => state?.auth)
 	// local state
@@ -22,7 +22,8 @@ const App = () => {
 
 	// functions
 	const validateUser = () => {
-		authApi
+		console.log("validationg user");
+		api
 			.get('/accounts/app/')
 			.then(res => {
 				const { statusCode, data } = res.data

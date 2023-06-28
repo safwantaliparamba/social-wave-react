@@ -2,13 +2,9 @@ import { logout } from "../../store/authSlice"
 
 
 //logout method
-export const logoutHandler = (dispatch, authApi) => {
-    const activeIndex = getItem("activeIndex")
-    const sessions = JSON.parse(getItem("sessions"))
+export const logoutHandler = (dispatch, api,sessionId) => {
 
-    const sessionId = sessions[activeIndex].sessionId
-
-    authApi
+    api
         .post(`/accounts/sign-out/${sessionId}/`)
         .then(res => {
             const { statusCode } = res.data
@@ -91,10 +87,4 @@ export const setItem = (title = "", item = "", json = false) => {
     localStorage.setItem(title, item);
 
     return true
-}
-
-export const getCurrentSession = (useSelector) => {
-    const { activeIndex, sessions } = useSelector(state => state.auth)
-
-    return sessions[activeIndex]
 }

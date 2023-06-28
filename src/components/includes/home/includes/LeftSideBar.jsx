@@ -27,9 +27,11 @@ import analyticsDark from "/icons/analytics-dark.svg"
 import analyticsLight from "/icons/analytics-light.svg"
 import notificationDark from "/icons/notification-dark.svg"
 import notificationLight from "/icons/notification-light.svg"
-import { isPathnameEqual, logoutHandler, sliceNumber, trimText } from "../../../functions"
-import useAuthApi from "../../../hooks/useAuthApi"
+
 import { switchAccount } from "../../../../store/authSlice"
+import { isPathnameEqual, logoutHandler, sliceNumber, trimText } from "../../../functions"
+import useApi from "../../../hooks/useApi"
+import useCurrentSession from "../../../hooks/useCurrentSession"
 
 
 const LeftSideBar = ({ }) => {
@@ -47,7 +49,8 @@ const LeftSideBar = ({ }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const { authApi } = useAuthApi()
+    const { api } = useApi()
+    const { sessionId } = useCurrentSession()
 
     // Local variables
     const buyPremiumHandler = () => {
@@ -55,7 +58,7 @@ const LeftSideBar = ({ }) => {
     }
 
     const LogoutHandler = () => {
-        logoutHandler(dispatch, authApi)
+        logoutHandler(dispatch, api,sessionId)
     }
 
     const navItems = useMemo(() => (
@@ -145,14 +148,13 @@ const LeftSideBar = ({ }) => {
     const AccountsModal = ({ }) => {
 
         const handler = (Email = "") => {
-            console.log(Email);
 
             if (Email === email) {
                 navigate(`/${username}`)
 
                 return
             } else {
-                dispatch(switchAccount({ email:Email }))
+                dispatch(switchAccount({ email: Email }))
                 navigate("/")
                 toggleDropdown()
             }
@@ -175,7 +177,7 @@ const LeftSideBar = ({ }) => {
                                         src={session.image}
                                         alt=""
                                     />
-                                    <span>{trimText(session.username, 18)}</span>
+                                    <span>{trimText(session.username, 14)}</span>
                                 </div>
                             </ModalItem>
                         ))

@@ -1,47 +1,51 @@
 import axios from "axios"
 import { useEffect } from "react"
-import { getItem } from "../functions"
+import useCurrentSession from "./useCurrentSession"
 
 
-const URL = "http://localhost:8000/api/v1"
+const Url = "http://localhost:8000/api/v1"
 
-
-const useApi = () => {
+const useApi = (auth = false, URL=Url) => {
     const api = axios.create({
         baseURL: URL,
     })
     const controller = new AbortController();
 
-    // middleware to add accessToken as auth credential
-    api.interceptors.request.use((request) => {
-        // get access token which we stored in localStorage
-        const sessionId = getItem("sessionId")
-    
-        request = {
-            ...request,
-            signal: controller.signal,
-            params: {
-                session_id: sessionId ?? null,
-            } 
-        }
+    if (auth) {
+        api.interceptors.request.use((request) => {
+            const activeSession = useCurrentSession()
 
-        if (controller.signal.aborted){
-            console.log("aborted");
+            const sessionId = activeSession?.sessionId
+            const accessToken = activeSession?.accessToken
 
-            // return 
-        }
+            request = {
+                ...request,
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                signal: controller.signal,
+                params: {
+                    session_id: sessionId ?? null,
+                },
+            }
 
-        return request
+            if (controller.signal.aborted) {
+                console.log("aborted");
+            }
 
-    }, (err) => {
+            return request
 
-        return err
-    })
+        }, (err) => {
+
+            return err
+        })
+    }
+
 
     useEffect(() => {
 
         return () => {
-            controller.abort("request Cancelled hook cleanup")
+            controller.abort("request Cancelled by hook cleanup function")
         }
     }, [location.pathname])
 
