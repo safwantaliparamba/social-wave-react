@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './assets/css/style.css';
+import useApi from './components/hooks/useApi';
 import { editUserData } from './store/authSlice';
 import MainRouter from './components/routers/router/MainRouter';
 import SessionExpired from './components/modals/auth/SessionExpired';
-import useApi from './components/hooks/useApi';
 
 
 export const env = import.meta.env
