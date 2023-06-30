@@ -10,10 +10,10 @@ const useApi = (auth = false, URL=Url) => {
         baseURL: URL,
     })
     const controller = new AbortController();
+    const activeSession = useCurrentSession()
 
     if (auth) {
         api.interceptors.request.use((request) => {
-            const activeSession = useCurrentSession()
 
             const sessionId = activeSession?.sessionId
             const accessToken = activeSession?.accessToken
