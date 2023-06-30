@@ -32,15 +32,14 @@ import { switchAccount } from "../../../../store/authSlice"
 import { isPathnameEqual, logoutHandler, sliceNumber, trimText } from "../../../functions"
 import useApi from "../../../hooks/useApi"
 import useCurrentSession from "../../../hooks/useCurrentSession"
+import Gravatar from "react-gravatar"
 
 
 const LeftSideBar = ({ }) => {
     // global states //
     const { theme } = useSelector(state => state.ui)
-    const { sessions, activeIndex } = useSelector(state => state.auth)
-
-    const activeSession = sessions[activeIndex]
-    const { username, email, isProMember, notificationCount, bookmarkCount } = activeSession
+    const { sessions } = useSelector(state => state.auth)
+    const { username, email, isProMember, notificationCount, bookmarkCount, image } = useCurrentSession()
 
     // Local states
     const [isAccountModalOpen, setAccount] = useState(false)
@@ -58,7 +57,7 @@ const LeftSideBar = ({ }) => {
     }
 
     const LogoutHandler = () => {
-        logoutHandler(dispatch, api,sessionId)
+        logoutHandler(dispatch, api, sessionId)
     }
 
     const navItems = useMemo(() => (
@@ -156,7 +155,7 @@ const LeftSideBar = ({ }) => {
             } else {
                 dispatch(switchAccount({ email: Email }))
                 navigate("/")
-                toggleDropdown()
+                // toggleDropdown()
             }
         }
 
@@ -171,13 +170,23 @@ const LeftSideBar = ({ }) => {
                                 onClick={() => handler(session.email)}
                             >
                                 <div className="wrapper">
-                                    <img
-                                        loading="lazy"
-                                        className="profile"
-                                        src={session.image}
-                                        alt=""
-                                    />
+                                    {session.image ? (
+                                        <img
+                                            loading="lazy"
+                                            className="profile" 
+                                            src={session.image}
+                                            alt=""
+                                        />
+                                    ) : (
+                                        <Gravatar
+                                            role="banner"
+                                            email={session.email}
+                                        />
+                                    )}
                                     <span>{trimText(session.username, 14)}</span>
+                                </div>
+                                <div className="switch">
+                                    {session.email === email && <span className="round"></span>}
                                 </div>
                             </ModalItem>
                         ))
@@ -209,11 +218,19 @@ const LeftSideBar = ({ }) => {
                             className="wrapper"
                             onClick={e => navigate(`/${username}`)}
                         >
-                            <img
-                                className="profile"
-                                src={activeSession.image}
-                                alt=""
-                            />
+                            {image ? (
+                                <img
+                                    loading="lazy"
+                                    className="profile"
+                                    src={image}
+                                    alt=""
+                                />
+                            ) : (
+                                <Gravatar
+                                    role="banner"
+                                    email={email}
+                                />
+                            )}
                             <span>{trimText(username, 14)}</span>
                         </div>
                         <div
@@ -339,6 +356,11 @@ const Profile = styled.div`
             border-radius: 6px;
             border-color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#808080"};
         } */
+        img.react-gravatar{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
         
         img.profile{
             width: 30px;
@@ -478,6 +500,11 @@ const ModalItem = styled(Profile)`
     margin: 0;
     margin-bottom: 1px;
     z-index: 10;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+    flex-wrap: wrap;
     /* background-color: inhe; */
 
     .wrapper{
@@ -486,6 +513,32 @@ const ModalItem = styled(Profile)`
         span{
             font-size: 14px;
             flex: 1;
+        }
+        .react-gravatar{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+    }
+    .switch{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin: 0 !important;
+        padding: 0 !important;
+        border:1px solid#808080;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        span.round{
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #808080;
         }
     }
 
