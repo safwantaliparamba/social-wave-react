@@ -5,7 +5,7 @@ import useCurrentSession from "./useCurrentSession"
 
 const Url = "http://localhost:8000/api/v1"
 
-const useApi = (auth = false, URL=Url) => {
+const useApi = (auth = false, URL = Url) => {
     const api = axios.create({
         baseURL: URL,
     })
