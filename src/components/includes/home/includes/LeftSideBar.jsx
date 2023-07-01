@@ -179,7 +179,7 @@ const LeftSideBar = ({ }) => {
                                         />
                                     ) : (
                                         <Gravatar
-                                            role="banner"
+                                            role="img"
                                             email={session.email}
                                         />
                                     )}

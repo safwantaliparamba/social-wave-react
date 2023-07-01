@@ -17,6 +17,8 @@ import hideIcon from '../../../assets/icons/hide-eye.svg'
 import googleLogo from '../../../assets/images/google-logo.svg'
 import Emailverification from '../../modals/auth/Emailverification'
 import useApi from '../../hooks/useApi'
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { auth, googleAuthProvider } from '../../../config/firebase'
 
 
 const SignUp = ({ type = "SIGNUP" }) => {
@@ -188,6 +190,35 @@ const SignUp = ({ type = "SIGNUP" }) => {
 		}
 	), [inputs])
 
+	const SignInWithGoogleHandler = useMemo(() => (
+		() => {
+			signInWithPopup(auth, googleAuthProvider)
+				.then((result) => {
+					// This gives you a Google Access Token. You can use it to access the Google API.
+					const credential = GoogleAuthProvider.credentialFromResult(result);
+					const token = credential.accessToken;
+					// The signed-in user info.
+					const user = result.user
+					user.email
+					user.displayName
+					user.emailVerified 
+
+					console.log(user);
+				}).catch((error) => {
+					// Handle Errors here.
+					const errorCode = error.code;
+					const errorMessage = error.message;
+					// The email of the user's account used.
+					const email = error.customData.email;
+					// The AuthCredential type that was used.
+					const credential = GoogleAuthProvider.credentialFromError(error);
+
+					console.log(credential);
+					// ...
+				});
+		}
+	), [])
+
 	useEffect(() => {
 
 		return () => {
@@ -319,9 +350,15 @@ const SignUp = ({ type = "SIGNUP" }) => {
 							<div className="or">
 								<span>Or</span>
 							</div>
-							<SubmitButton className="google" theme={theme}>
+							<SubmitButton
+								className="google"
+								theme={theme}
+								onClick={SignInWithGoogleHandler}
+							>
 								<img src={googleLogo} alt="" />
-								<span>{type === "SIGNUP" ? "Sign Up" : "Login"} with Google</span>
+								<span>
+									{type === "SIGNUP" ? "Sign Up" : "Login"} with Google
+								</span>
 							</SubmitButton>
 							<LoginActionContainer theme={theme}>
 								{

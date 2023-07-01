@@ -66,12 +66,9 @@ const authSlice = createSlice({
         },
         switchAccount: (state, { payload }) => {
             const { email } = payload
-            console.log(email);
 
             let tempSessions = [...state.sessions]
             const index = tempSessions.findIndex(session => session.email === email)
-
-            console.log(index);
 
             if (index !== -1) {
                 setItem("activeIndex", index)
@@ -81,7 +78,7 @@ const authSlice = createSlice({
         },
         logout: (state) => {
             // logic
-            return { ...initialState, isAuthenticated: false }
+            state.isAuthenticated = false
         }
     }
 })

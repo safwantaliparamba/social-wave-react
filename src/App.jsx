@@ -9,7 +9,7 @@ import MainRouter from './components/routers/router/MainRouter';
 import SessionExpired from './components/modals/auth/SessionExpired';
 
 
-export const env = import.meta.env
+export const ENV = import.meta.env
 
 const App = () => {
 	// hooks
@@ -19,7 +19,6 @@ const App = () => {
 	const { isAuthenticated,activeIndex } = useSelector(state => state?.auth)
 	// local state
 	const [isSessionExpired, setExpired] = useState(false)
-
 	// functions
 	const validateUser = () => {
 		console.log("validationg user");
