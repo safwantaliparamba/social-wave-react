@@ -31,10 +31,10 @@ export default function debounce(fn, delay) {
 
 // function to trim text based on maxlength
 export function trimText(text = "", maxLength = 10) {
-    if (text.length <= maxLength) {
+    if (text?.length <= maxLength) {
         return text;
     } else {
-        return text.slice(0, maxLength).trim() + '...';
+        return text?.slice(0, maxLength).trim() + '...';
     }
 }
 

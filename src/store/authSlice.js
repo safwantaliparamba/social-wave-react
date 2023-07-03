@@ -15,29 +15,25 @@ const authSlice = createSlice({
         login: (state, { payload }) => {
             const { email } = payload
 
-            const isExists = state.sessions.find(session => session.email === email) ?? false
+            let tempSessions = [...state.sessions]
+            const index = tempSessions.findIndex(session => session.email === email)
 
-            if (isExists) {
-                let tempSessions = [...state.sessions]
+            if (index !== -1) {
+                tempSessions.splice(index, 1, { ...payload })
 
-                const index = tempSessions.findIndex(session => session.email === email)
-
-                if (index !== -1) {
-                    tempSessions.splice(index, 0, { ...payload })
-
-                    const tempState = {
-                        ...state,
-                        sessions: tempSessions,
-                        activeIndex: index,
-                        isAuthenticated: true
-                    }
-
-                    setItem("activeIndex", index)
-                    setItem("isAuthenticated", true)
-                    setItem("sessions", JSON.stringify(tempSessions))
-
-                    return tempState
+                const tempState = {
+                    ...state,
+                    sessions: tempSessions,
+                    activeIndex: index,
+                    isAuthenticated: true
                 }
+
+                setItem("activeIndex", index)
+                setItem("isAuthenticated", true)
+                setItem("sessions", JSON.stringify(tempSessions))
+
+                return tempState
+
             } else {
                 const sessions = [...state.sessions, { ...payload }]
                 const activeIndex = sessions.length - 1

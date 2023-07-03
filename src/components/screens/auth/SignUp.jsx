@@ -19,6 +19,7 @@ import Emailverification from '../../modals/auth/Emailverification'
 import useApi from '../../hooks/useApi'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { auth, googleAuthProvider } from '../../../config/firebase'
+import GoogleAuthResult from '../../modals/auth/GoogleAuthResult'
 
 
 const SignUp = ({ type = "SIGNUP" }) => {
@@ -35,6 +36,7 @@ const SignUp = ({ type = "SIGNUP" }) => {
 	})
 	const { api: loginApi, controller: loginAborter } = useApi()
 	const { api: signupApi, controller: signupController } = useApi()
+	const { api, controller } = useApi()
 
 	// local variables
 	const initialInputs = {
@@ -50,8 +52,10 @@ const SignUp = ({ type = "SIGNUP" }) => {
 		confirm_password: false,
 	})
 	const [errorMessage, setErrorMessage] = useState("")
-	const [isError, setError] = useState("") // "active" or "close"
 	const [isMailSent, setIsSent] = useState(false)
+	const [isError, setError] = useState("") // "active" or "close"
+	const [isLoading, setLoading] = useState(false)
+	const [isShowGoogleModal, setGoogle] = useState(false)
 
 	// Effects
 	useEffect(() => {
@@ -191,31 +195,45 @@ const SignUp = ({ type = "SIGNUP" }) => {
 	), [inputs])
 
 	const SignInWithGoogleHandler = useMemo(() => (
-		() => {
-			signInWithPopup(auth, googleAuthProvider)
-				.then((result) => {
-					// This gives you a Google Access Token. You can use it to access the Google API.
-					const credential = GoogleAuthProvider.credentialFromResult(result);
-					const token = credential.accessToken;
-					// The signed-in user info.
-					const user = result.user
-					user.email
-					user.displayName
-					user.emailVerified 
+		async () => {
 
-					console.log(user);
-				}).catch((error) => {
-					// Handle Errors here.
-					const errorCode = error.code;
-					const errorMessage = error.message;
-					// The email of the user's account used.
-					const email = error.customData.email;
-					// The AuthCredential type that was used.
-					const credential = GoogleAuthProvider.credentialFromError(error);
+			setGoogle(true)
+			setLoading(true)
+			try {
+				const result = await signInWithPopup(auth, googleAuthProvider)
 
-					console.log(credential);
-					// ...
-				});
+				const params = {
+					email: result?.user?.email,
+					name: result?.user?.displayName
+				}
+
+				api
+					.post(`/accounts/sign-in-with-google/`, params)
+					.then(({ data: { statusCode, data } }) => {
+
+						if (statusCode === 6000) {
+							dispatch(login({
+								name: data.name,
+								email: data.email,
+								image: data.image,
+								username: data.username,
+								accessToken: data.access,
+								refreshToken: data.refresh,
+								sessionId: data.session_id,
+							}))
+							const next = searchParams.get("next")
+
+							setGoogle(false)
+							setLoading(false)
+							navigate(next)
+						}
+					})
+
+			} catch (e) {
+				setGoogle(false)
+				setLoading(false)
+				console.log(e);
+			}
 		}
 	), [])
 
@@ -248,6 +266,9 @@ const SignUp = ({ type = "SIGNUP" }) => {
 					closeHandler={emailModalCloseHandler}
 				/>
 			}
+			{isShowGoogleModal && (
+				<GoogleAuthResult isLoading={isLoading} />
+			)}
 			<Wrapper theme={theme}>
 				<Left theme={theme}>
 					<div className="top">
