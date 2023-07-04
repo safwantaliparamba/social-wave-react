@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { keyframes, styled } from 'styled-components'
 
-import BaseModal from '../modals/base/BaseModal'
+import BaseModal from '../../modals/base/BaseModal'
 import settingsDark from "/icons/settings-dark.svg"
 import settingsLight from "/icons/settings-light.svg"
 
@@ -21,7 +21,7 @@ const Settings = () => {
         >
             <Modal theme={theme} onClick={e => e.stopPropagation()}>
                 <Header>
-                    {/* <img src={theme === "DARK" ? settingsLight : settingsLight} alt="" /> */}
+                    <img src={theme === "DARK" ? settingsLight : settingsLight} alt="" />
                     <h1>Settings</h1>
                 </Header>
                 <MainContent>
@@ -65,12 +65,12 @@ const Modal = styled.main`
 const Header = styled.div`
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 12px;
     padding: 22px 42px;
     border-bottom: 1px solid #d9d9d9a6;
 
     img{
-        width: 28px;
+        width: 16px;
     }
     h1{
         font-size: 22px;

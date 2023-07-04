@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 import { getItem, setItem } from "../components/functions";
 
 
@@ -73,7 +74,12 @@ const authSlice = createSlice({
             }
         },
         logout: (state) => {
-            // logic
+            const tempSessions = [...state.sessions]
+            const index = state.activeIndex
+
+            tempSessions.splice(index, 1)
+
+            state.sessions = tempSessions
             state.isAuthenticated = false
         }
     }

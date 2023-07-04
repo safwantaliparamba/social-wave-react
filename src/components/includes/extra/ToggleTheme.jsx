@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 
-import { changeTheme } from '../../store/uiSlice';
+import { changeTheme } from '../../../store/uiSlice';
 
 
 const MoonIcon = () => (
