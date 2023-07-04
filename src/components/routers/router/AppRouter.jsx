@@ -5,15 +5,18 @@ import { Route, Routes } from "react-router-dom";
 // local imports 
 import Home from '../../screens/main/Home';
 import Nav from '../../includes/home/Nav';
-import Settings from '../../screens/main/Settings';
+import MainAnalytics from '../../screens/main/analytics/MainAnalytics';
+import SettingsRoutes from './SettingsRoutes';
 
 
 const AppRouter = () => {
     return (
         <Nav>
             <Routes>
-                <Route path='' element={<Home />}>
-                    <Route path="settings/" element={<Settings />} />
+                <Route path=''>
+                    <Route index element={<Home />} />
+                    <Route path="settings/*" element={<SettingsRoutes />} />
+                    <Route path="analytics/" element={<MainAnalytics />} />
                 </Route>
             </Routes>
         </Nav>

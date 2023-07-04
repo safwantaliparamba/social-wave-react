@@ -82,7 +82,6 @@ const Header = ({ }) => {
 
     // functions
     const SearchHandler = () => {
-        console.log("Search handler triggered");
     }
 
     // Effects 

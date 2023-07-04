@@ -1,15 +1,15 @@
 import React from 'react'
 
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { keyframes, styled } from 'styled-components'
 
-import BaseModal from '../../modals/base/BaseModal'
+import BaseModal from '../../../modals/base/BaseModal'
 import settingsDark from "/icons/settings-dark.svg"
 import settingsLight from "/icons/settings-light.svg"
 
 
-const Settings = () => {
+const BaseSettings = () => {
     const { theme } = useSelector(state => state.ui)
     const navigate = useNavigate()
 
@@ -28,14 +28,16 @@ const Settings = () => {
                     <LeftNav>
                         <h1>aside</h1>
                     </LeftNav>
-                    <Content></Content>
+                    <Content>
+                        <Outlet />
+                    </Content>
                 </MainContent>
             </Modal>
         </BaseModal>
     )
 }
 
-export default Settings;
+export default BaseSettings;
 
 
 const popup = keyframes`
