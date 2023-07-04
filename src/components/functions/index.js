@@ -2,7 +2,7 @@ import { logout } from "../../store/authSlice"
 
 
 //logout method
-export const logoutHandler = (dispatch, api,sessionId) => {
+export const logoutHandler = (dispatch, api, sessionId) => {
 
     api
         .post(`/accounts/sign-out/${sessionId}/`)

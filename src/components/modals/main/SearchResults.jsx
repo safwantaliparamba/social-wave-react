@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import useClickOutside from 'react-use-click-outside-hook'
 
-import Loader from '../includes/loaders/Loader'
+import Loader from '../../includes/loaders/Loader'
 
 
 const SearchResults = ({ closeHandler = () => { }, isLoading = false, users = [] }) => {

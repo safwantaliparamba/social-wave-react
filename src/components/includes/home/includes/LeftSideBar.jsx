@@ -48,7 +48,7 @@ const LeftSideBar = ({ }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const { api } = useApi()
+    const { api } = useApi(true)
     const { sessionId } = useCurrentSession()
 
     // Local variables
@@ -109,7 +109,7 @@ const LeftSideBar = ({ }) => {
                 url: "/settings",
             },
         ]
-    ), [])
+    ), [email])
 
     const bottomNavItems = useMemo(() => {
         const temp = [
@@ -136,7 +136,7 @@ const LeftSideBar = ({ }) => {
 
         return temp
 
-    }, [])
+    }, [email])
 
     const toggleDropdown = () => setAccount(false)
 
