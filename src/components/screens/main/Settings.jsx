@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { keyframes, styled } from 'styled-components'
 
-import BaseModal from '../modals/base/BaseModal'
+import BaseModal from '../../modals/base/BaseModal'
 import settingsDark from "/icons/settings-dark.svg"
 import settingsLight from "/icons/settings-light.svg"
 

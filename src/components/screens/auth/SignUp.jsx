@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 // import tickIcon from '../../../assets/icons/tick.svg'
-import Logo from '../../includes/Logo'
+import Logo from '../../includes/extra/Logo'
 import { login } from '../../../store/authSlice'
-import SilentLink from '../../includes/SilentLink'
+import SilentLink from '../../includes/extra/SilentLink'
 import eyeIcon from '../../../assets/icons/eye.svg'
-import ThemeToggle from '../../includes/ToggleTheme'
+import ThemeToggle from '../../includes/extra/ToggleTheme'
 import heroImg from '../../../assets/images/hero.svg'
 import closeIcon from '../../../assets/icons/close.svg'
 import hideIcon from '../../../assets/icons/hide-eye.svg'
@@ -25,7 +25,6 @@ import GoogleAuthResult from '../../modals/auth/GoogleAuthResult'
 const SignUp = ({ type = "SIGNUP" }) => {
 	// -------global state-------
 	const theme = useSelector(state => state.ui.theme)
-	const { sessionId } = useSelector(state => state.auth)
 
 	// ----------hooks----------
 	const dispatch = useDispatch()

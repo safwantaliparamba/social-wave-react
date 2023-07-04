@@ -1,18 +1,18 @@
 import { useMemo, useState } from "react"
 
-import { useDispatch, useSelector } from "react-redux"
+import Gravatar from "react-gravatar"
+import { toast } from "react-toastify"
 import { styled } from "styled-components"
 import { nanoid } from "@reduxjs/toolkit"
 import { useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
 import useClickOutside from "react-use-click-outside-hook"
 
-import Logo from "../../Logo"
-import SilentLink from "../../SilentLink"
+import Logo from "../../extra/Logo"
 import homeDark from "/icons/home-dark.svg"
 import plusDark from "/icons/plus-dark.svg"
 import plusLight from "/icons/plus-light.svg"
 import homeLight from "/icons/home-light.svg"
-import profile from "/images/profile-demo.jpg"
 import logoutRed from "/icons/logout-red.svg"
 import premiumGold from "/icons/premium-gold.svg"
 import exploreDark from "/icons/explore-dark.svg"
@@ -28,12 +28,11 @@ import analyticsLight from "/icons/analytics-light.svg"
 import notificationDark from "/icons/notification-dark.svg"
 import notificationLight from "/icons/notification-light.svg"
 
-import { switchAccount } from "../../../../store/authSlice"
-import { isPathnameEqual, logoutHandler, sliceNumber, trimText } from "../../../functions"
+import SilentLink from "../../extra/SilentLink"
 import useApi from "../../../hooks/useApi"
+import { switchAccount } from "../../../../store/authSlice"
 import useCurrentSession from "../../../hooks/useCurrentSession"
-import Gravatar from "react-gravatar"
-import { toast } from "react-toastify"
+import { isPathnameEqual, logoutHandler, sliceNumber, trimText } from "../../../functions"
 
 
 const LeftSideBar = ({ }) => {

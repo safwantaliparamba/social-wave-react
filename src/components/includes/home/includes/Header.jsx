@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { nanoid } from "@reduxjs/toolkit"
 import { styled } from "styled-components"
 
-import ThemeToggle from "../../ToggleTheme"
+import ThemeToggle from "../../extra/ToggleTheme"
 import profile from "/images/profile-demo.jpg"
 import searchDark from "/icons/search-dark.svg"
 import searchLight from "/icons/search-light.svg"

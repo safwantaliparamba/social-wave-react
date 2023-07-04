@@ -3,9 +3,9 @@ import React from 'react'
 import { Route, Routes } from "react-router-dom";
 
 // local imports 
-import Home from '../../screens/Home';
+import Home from '../../screens/main/Home';
 import Nav from '../../includes/home/Nav';
-import Settings from '../../screens/Settings';
+import Settings from '../../screens/main/Settings';
 
 
 const AppRouter = () => {

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Outlet } from "react-router-dom"
 // import { useSelector } from 'react-redux'
 
-import CreatePost from '../includes/home/posts/CreatePost'
+import CreatePost from '../../includes/home/posts/CreatePost'
 
 
 const Home = () => {
