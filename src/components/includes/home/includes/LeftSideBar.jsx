@@ -33,6 +33,7 @@ import { isPathnameEqual, logoutHandler, sliceNumber, trimText } from "../../../
 import useApi from "../../../hooks/useApi"
 import useCurrentSession from "../../../hooks/useCurrentSession"
 import Gravatar from "react-gravatar"
+import { toast } from "react-toastify"
 
 
 const LeftSideBar = ({ }) => {
@@ -147,15 +148,15 @@ const LeftSideBar = ({ }) => {
     const AccountsModal = ({ }) => {
 
         const handler = (Email = "") => {
-
             if (Email === email) {
                 navigate(`/${username}`)
-
+                
                 return
             } else {
                 dispatch(switchAccount({ email: Email }))
                 navigate("/")
-                // toggleDropdown()
+                toast.info("Account switched successfully")
+                toggleDropdown()
             }
         }
 

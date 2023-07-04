@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import './assets/css/style.css';
 import useApi from './components/hooks/useApi';
@@ -16,7 +18,7 @@ const App = () => {
 	const dispatch = useDispatch()
 	const { api, controller } = useApi(true)
 	// global state
-	const { isAuthenticated,activeIndex } = useSelector(state => state?.auth)
+	const { isAuthenticated, activeIndex } = useSelector(state => state?.auth)
 	// local state
 	const [isSessionExpired, setExpired] = useState(false)
 	// functions
@@ -58,6 +60,7 @@ const App = () => {
 		}
 	}, [activeIndex])
 
+
 	return (
 		<>
 			{isSessionExpired &&
@@ -65,6 +68,15 @@ const App = () => {
 					closeHandler={() => setExpired(false)}
 				/>
 			}
+			<ToastContainer
+				position="bottom-left"
+				autoClose="4500"
+				hideProgressBar={true}
+				newestOnTop={false}
+				rtl={false}
+				pauseOnHover
+				theme="dark"
+			/>
 			<MainRouter />
 		</>
 	)
