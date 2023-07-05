@@ -4,11 +4,15 @@ import { styled } from 'styled-components'
 import useClickOutside from 'react-use-click-outside-hook'
 
 import Loader from '../../includes/loaders/Loader'
+import useTabNavigation from '../../hooks/useTabNavigation'
 
 
 const SearchResults = ({ closeHandler = () => { }, isLoading = false, users = [] }) => {
     // Global state
     const { theme } = useSelector(state => state.ui)
+
+    // hooks
+    useTabNavigation("focusable")
 
     // Third party hooks
     const modalRef = useClickOutside(closeHandler, "search-input")

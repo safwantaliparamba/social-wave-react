@@ -7,6 +7,9 @@ import { keyframes, styled } from 'styled-components'
 import BaseModal from '../../../modals/base/BaseModal'
 import settingsDark from "/icons/settings-dark.svg"
 import settingsLight from "/icons/settings-light.svg"
+import { useMemo } from 'react'
+import { nanoid } from '@reduxjs/toolkit'
+import { isPathnameEqual } from '../../../functions'
 
 
 const BaseSettings = () => {
@@ -15,18 +18,59 @@ const BaseSettings = () => {
 
     const closeHandler = () => navigate("/")
 
+    const navItems = useMemo(() => (
+        [
+            {
+                id: nanoid(12),
+                title: "Public Profile",
+                url: "profile",
+            },
+            {
+                id: nanoid(12),
+                title: "Accounts",
+                url: "accounts",
+            },
+            {
+                id: nanoid(12),
+                title: "Sessions",
+                url: "sessions",
+            },
+            {
+                id: nanoid(12),
+                title: "Security",
+                url: "security",
+            },
+        ]
+    ), [])
+
     return (
         <BaseModal
             onClick={closeHandler}
         >
-            <Modal theme={theme} onClick={e => e.stopPropagation()}>
+            <Modal
+                theme={theme}
+                onClick={e => e.stopPropagation()}
+            >
                 <Header>
                     <img src={theme === "DARK" ? settingsLight : settingsLight} alt="" />
                     <h1>Settings</h1>
                 </Header>
                 <MainContent>
                     <LeftNav>
-                        <h1>aside</h1>
+                        <Items>
+                            {
+                                navItems.map(item => (
+                                    <Item
+                                        key={item.id}
+                                        theme={theme}
+                                        onClick={e => navigate(`/settings/${item.url}`)}
+                                        className={isPathnameEqual(`/settings/${item.url}`) ? "active" : ""}
+                                    >
+                                        <span>{item.title}</span>
+                                    </Item>
+                                ))
+                            }
+                        </Items>
                     </LeftNav>
                     <Content>
                         <Outlet />
@@ -92,4 +136,42 @@ const LeftNav = styled.aside`
 
 const Content = styled.main`
     width: 80%;
+`
+
+const Items = styled.ul`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+`
+const Item = styled.div`
+    padding: 12px 0 ;
+    margin: 0 6px;
+    padding: 12px;
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+    gap: 18px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.3s ease-in-out;
+    border-radius: 8px;
+
+    &:hover, 
+    &.active{
+        background:  ${({ theme }) => theme === "DARK" ? "#8080801a" : "#fff"};
+        border-color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#808080"};
+    }
+    span{
+        font-size: 14px;
+        color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#111"};
+    }
+
+    span.count{
+        font-size: 14px;
+        // color: red;
+        font-weight: 600;
+        /* color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#111"}; */
+        /* color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#111"}; */
+    }
 `

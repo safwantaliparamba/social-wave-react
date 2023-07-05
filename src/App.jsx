@@ -10,7 +10,6 @@ import { editUserData } from './store/authSlice';
 import MainRouter from './components/routers/router/MainRouter';
 import SessionExpired from './components/modals/auth/SessionExpired';
 
-
 export const ENV = import.meta.env
 
 const App = () => {
@@ -58,7 +57,6 @@ const App = () => {
 			controller.abort()
 		}
 	}, [activeIndex])
-
 
 	return (
 		<>

@@ -9,7 +9,6 @@ import profile from "/images/profile-demo.jpg"
 import searchDark from "/icons/search-dark.svg"
 import searchLight from "/icons/search-light.svg"
 import SearchResults from "../../../modals/main/SearchResults"
-import useTabNavigation from "../../../hooks/useTabNavigation"
 
 
 const Header = ({ }) => {
@@ -76,9 +75,6 @@ const Header = ({ }) => {
             isFollowing: true,
         },
     ])
-
-    // hooks
-    useTabNavigation("focusable")
 
     // functions
     const SearchHandler = () => {
