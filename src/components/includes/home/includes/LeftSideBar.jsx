@@ -139,10 +139,10 @@ const LeftSideBar = ({ }) => {
     const toggleDropdown = () => setAccount(false)
 
     // custom hooks //
-    const accountModalRef = useClickOutside(toggleDropdown, "accountModalParent")
-
-
+    
+    
     const AccountsModal = ({ }) => {
+        const accountModalRef = useClickOutside(toggleDropdown, "accountModalParent")
 
         const handler = (Email = "") => {
             if (Email === email) {

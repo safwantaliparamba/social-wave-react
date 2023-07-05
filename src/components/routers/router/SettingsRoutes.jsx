@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import BaseSettings from "../../screens/main/settings/BaseSettings";
-import Profile from "../../screens/main/settings/Profile";
+import ProfileSettings from "../../screens/main/settings/ProfileSettings";
 
 
 const SettingsRoutes = () => {
@@ -8,7 +8,7 @@ const SettingsRoutes = () => {
         <Routes>
             <Route path="*" element={<BaseSettings />}>
                 <Route index element={<Navigate to="/settings/profile" />} />
-                <Route path='profile/' element={<Profile />} />
+                <Route path='profile/' element={<ProfileSettings />} />
             </Route>
         </Routes>
     );
