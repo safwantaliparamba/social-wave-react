@@ -23,7 +23,6 @@ const App = () => {
 	const [isSessionExpired, setExpired] = useState(false)
 	// functions
 	const validateUser = () => {
-		console.log("validationg user");
 		api
 			.get('/accounts/app/')
 			.then(res => {

@@ -9,7 +9,11 @@ import PrivateRoute from "../routes/PrivateRoute";
 const MainRouter = () => {
     return (
         <Routes>
-            <Route path="/*" element={<PrivateRoute><AppRouter /></PrivateRoute>} />
+            <Route path="/*" element={(
+                <PrivateRoute>
+                    <AppRouter />
+                </PrivateRoute>
+            )} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/sign-in" element={<SignUp type="SIGNIN" />} />
         </Routes>

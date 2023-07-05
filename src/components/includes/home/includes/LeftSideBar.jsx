@@ -52,9 +52,7 @@ const LeftSideBar = ({ }) => {
     const { sessionId } = useCurrentSession()
 
     // Local variables
-    const buyPremiumHandler = () => {
-        console.log("Buy premium");
-    }
+    const buyPremiumHandler = () => { }
 
     const LogoutHandler = () => {
         logoutHandler(dispatch, api, sessionId)
@@ -149,7 +147,7 @@ const LeftSideBar = ({ }) => {
         const handler = (Email = "") => {
             if (Email === email) {
                 navigate(`/${username}`)
-                
+
                 return
             } else {
                 dispatch(switchAccount({ email: Email }))
@@ -173,7 +171,7 @@ const LeftSideBar = ({ }) => {
                                     {session.image ? (
                                         <img
                                             loading="lazy"
-                                            className="profile" 
+                                            className="profile"
                                             src={session.image}
                                             alt=""
                                         />

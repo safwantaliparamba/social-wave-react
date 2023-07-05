@@ -98,7 +98,6 @@ const SignUp = ({ type = "SIGNUP" }) => {
 	}
 
 	const validate = () => {
-		console.log(inputs);
 
 		if (type === "SIGNUP") {
 			// signup error validation
@@ -159,10 +158,6 @@ const SignUp = ({ type = "SIGNUP" }) => {
 					}
 				})
 				.catch(e => {
-
-					if (axios.isCancel(e)) {
-						console.log("Request cancelled");
-					}
 					console.log(e.message, "error message")
 				})
 		}
