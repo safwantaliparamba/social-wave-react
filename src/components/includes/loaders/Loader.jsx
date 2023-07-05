@@ -3,14 +3,22 @@ import { styled } from 'styled-components'
 
 
 const Loader = () => {
-    return (
-        <Wrapper>  </Wrapper>
-    )
+	return (
+		<Wrapper>
+			<Spinner></Spinner>
+		</Wrapper>
+	)
 }
 
 export default Loader
 
-const Wrapper = styled.section`
+const Wrapper = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`
+
+const Spinner = styled.section`
   width: 48px;
   height: 48px;
   border-radius: 50%;
