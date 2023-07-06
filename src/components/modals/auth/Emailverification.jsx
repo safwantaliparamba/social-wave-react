@@ -110,6 +110,7 @@ export const Button = styled.button`
     &.save{
         background-color: #238636;
         border: none;
+        font-weight: 500;
         color: #fff;
     }
 `
