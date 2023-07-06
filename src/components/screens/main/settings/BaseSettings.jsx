@@ -131,7 +131,7 @@ const MainContent = styled.section`
 const LeftNav = styled.aside`
     width: 20%;
     height: calc(85vh - 77px);
-    border-right: 1px solid #d9d9d9a6;
+    /* border-right: 1px solid #d9d9d9a6; */
 `
 
 const Content = styled.main`
@@ -142,7 +142,7 @@ const Items = styled.ul`
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin-top: 6px;
+    margin-top: 16px;
 `
 const Item = styled.div`
     padding: 12px 0 ;
@@ -153,18 +153,19 @@ const Item = styled.div`
     justify-content: space-between;
     gap: 18px;
     cursor: pointer;
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     transition: all 0.3s ease-in-out;
     border-radius: 8px;
 
     &:hover, 
     &.active{
         background:  ${({ theme }) => theme === "DARK" ? "#8080801a" : "#fff"};
-        border-color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#808080"};
+        /* border-color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#808080"}; */
     }
     span{
         font-size: 14px;
-        color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#111"};
+        color: #fff;
+        /* color: ${({ theme }) => theme === "DARK" ? "#d9d7d7" : "#111"}; */
     }
 
     span.count{

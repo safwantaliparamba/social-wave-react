@@ -105,6 +105,12 @@ export const Button = styled.button`
     &.close{
         color: #fff;
         background-color: #004c64 ;
+    }
 
+    &.save{
+        background-color: #238636;
+        border: none;
+        font-weight: 500;
+        color: #fff;
     }
 `
