@@ -136,6 +136,9 @@ const LeftNav = styled.aside`
 
 const Content = styled.main`
     width: 80%;
+    padding: 8px;
+    max-height: calc(85vh - 77px);
+    overflow-y: scroll;
 `
 
 const Items = styled.ul`
