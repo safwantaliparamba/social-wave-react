@@ -185,7 +185,7 @@ const ProfileSettings = () => {
 
         const removeHandler = () => {
             setInputs({ ...profileInputs, image: null })
-            setImage({ ...toggleCropper, image: null, isCropped: false })
+            setImage({ ...toggleCropper, image: "CANCELLED", isCropped: false })
         }
 
         const onImageChange = useMemo(() => (
@@ -259,7 +259,7 @@ const ProfileSettings = () => {
                         status: "SUCCESS",
                         message,
                     })
-                    // toast.success("Public profile updated successfully")
+                    // toast.success("Public profile updated successfully") 
                 } else {
                     setResponse({
                         status: "ERROR",
