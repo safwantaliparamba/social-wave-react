@@ -8,7 +8,7 @@ import PrivateRoute from "../routes/PrivateRoute";
 
 const MainRouter = () => {
     return (
-        <Routes>
+        <Routes >
             <Route path="/*" element={(
                 <PrivateRoute>
                     <AppRouter />

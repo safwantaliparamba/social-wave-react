@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useSelector } from 'react-redux'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { keyframes, styled } from 'styled-components'
 
 import BaseModal from '../../../modals/base/BaseModal'
@@ -10,13 +10,18 @@ import settingsLight from "/icons/settings-light.svg"
 import { useMemo } from 'react'
 import { nanoid } from '@reduxjs/toolkit'
 import { isPathnameEqual } from '../../../functions'
+import { useEffect } from 'react'
+import { useState } from 'react'
 
 
-const BaseSettings = () => {
+const BaseSettings = ({ prevLocation = "/" }) => {
     const { theme } = useSelector(state => state.ui)
+
     const navigate = useNavigate()
 
-    const closeHandler = () => navigate("/")
+    const closeHandler = () => {
+        navigate(prevLocation ?? "/")
+    }
 
     const navItems = useMemo(() => (
         [

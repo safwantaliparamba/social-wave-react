@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     //if theme already set then it will take that value or the default value - LIGHT
     theme: localStorage.getItem("THEME") ?? 'DARK', // LIGHT or DARK
+    locations: []
 }
 
 const uiSlice = createSlice({
@@ -15,10 +16,13 @@ const uiSlice = createSlice({
             state.theme = theme
 
             localStorage.setItem('THEME', theme)
+        },
+        pushState: (state, { payload }) => {
+            state.locations.push(payload)
         }
     }
 })
 
 export default uiSlice.reducer
 
-export const { changeTheme } = uiSlice.actions 
+export const { changeTheme, pushState } = uiSlice.actions 
