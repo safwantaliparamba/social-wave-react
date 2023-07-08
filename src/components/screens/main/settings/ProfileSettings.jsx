@@ -41,11 +41,15 @@ const ProfileSettings = () => {
         tempImage: null,
         isCropped: false,
     })
+    const [apiResponse, setResponse] = useState({
+        status: null,
+        message: null,
+    })
     // hooks
-    // const { image } = useCurrentSession()
     const { api, controller } = useApi(true)
     const dispatch = useDispatch()
 
+    // useEffect fetch functions
     const fetchProfile = () => {
         setLoading(true)
 
@@ -181,7 +185,7 @@ const ProfileSettings = () => {
 
         const removeHandler = () => {
             setInputs({ ...profileInputs, image: null })
-            setImage({ ...toggleCropper, image: null, isCropped: false })
+            setImage({ ...toggleCropper, image: "CANCELLED", isCropped: false })
         }
 
         const onImageChange = useMemo(() => (
@@ -228,9 +232,7 @@ const ProfileSettings = () => {
 
     const cropperCloseHandler = () => setImage({ ...toggleCropper, isShow: false })
 
-    const cropperSubmitHandler = (image = "") => {
-        setImage({ ...toggleCropper, isCropped: true, image, isShow: false })
-    }
+    const cropperSubmitHandler = (image = "") => setImage({ ...toggleCropper, isCropped: true, image, isShow: false })
 
     const saveHandler = () => {
         const { bio, name, username, pronouns } = profileInputs
@@ -245,24 +247,32 @@ const ProfileSettings = () => {
 
         api
             .post("/accounts/settings/profile/edit/", params)
-            .then(({ data: { statusCode, data:{data} } }) => {
+            .then(({ data: { statusCode, data: { data, message } } }) => {
 
-                console.log(data);
-                
                 if (statusCode === 6000) {
                     dispatch(editUserData({
-                        name:       data.name,
-                        username:   data.username,
-                        image:      data.thumbnail,
+                        name: data.name,
+                        username: data.username,
+                        image: data.thumbnail,
                     }))
-                    toast.success("Public profile updated successfully")
-                }else{
-                    // handle errors
+                    setResponse({
+                        status: "SUCCESS",
+                        message,
+                    })
+                    // toast.success("Public profile updated successfully") 
+                } else {
+                    setResponse({
+                        status: "ERROR",
+                        message,
+                    })
                 }
             })
             .catch((e) => {
-                console.log(e,"Error occured");
+                console.log(e, "Error occured");
             })
+    }
+    const closeStatusDialog = () => {
+        setResponse({ status: null })
     }
 
     return (
@@ -281,6 +291,20 @@ const ProfileSettings = () => {
                     <Loader />
                 ) : (
                     <>
+                        {
+                            apiResponse.status && (
+                                <ErrorContainer
+                                    className={apiResponse.status.toLowerCase()}
+                                >
+                                    <p>{apiResponse.message}</p>
+                                    <span
+                                        onClick={closeStatusDialog}
+                                    >
+                                        x
+                                    </span>
+                                </ErrorContainer>
+                            )
+                        }
                         <Top>
                             <h1>Public Profile</h1>
                             <Button
@@ -519,4 +543,36 @@ const ActionModalWrapper = styled.div`
     border-radius: 6px;
     max-height: 100px;
     overflow-y: scroll;
+`
+
+const ErrorContainer = styled.div`
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    border: 1px solid ;
+    padding:  18px;
+    border-radius: 8px;
+    margin-bottom: 22px;
+
+    &.error{
+        border-color: #ff9292;
+        
+        p,span{
+            color: #ff9292;
+        }
+    }
+    &.success{
+        border-color: #a2ffb1;
+        
+        p,span{
+            color: #a2ffb1;
+        }
+    }
+    p{
+        font-size: 15px;
+    }
+    span{
+        font-size: 14px;
+        cursor: pointer;
+    }
 `
