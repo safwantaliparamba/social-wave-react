@@ -1,17 +1,14 @@
 import React from 'react'
 
-import { useSelector } from 'react-redux'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { keyframes, styled } from 'styled-components'
-
-import BaseModal from '../../../modals/base/BaseModal'
-import settingsDark from "/icons/settings-dark.svg"
-import settingsLight from "/icons/settings-light.svg"
 import { useMemo } from 'react'
 import { nanoid } from '@reduxjs/toolkit'
+import { useSelector } from 'react-redux'
+import { keyframes, styled } from 'styled-components'
+import { Outlet, useNavigate } from 'react-router-dom'
+
 import { isPathnameEqual } from '../../../functions'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import settingsLight from "/icons/settings-light.svg"
+import BaseModal from '../../../modals/base/BaseModal'
 
 
 const BaseSettings = ({ prevLocation = "/" }) => {
