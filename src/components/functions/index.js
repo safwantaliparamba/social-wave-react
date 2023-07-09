@@ -44,7 +44,7 @@ export function isPathnameEqual(string, pathname = location.pathname) {
     const trimmedPathname = pathname.replace(/\/$/, '');
 
     // Check if the trimmed pathname is equal to the provided string
-    return trimmedPathname === string;
+    return trimmedPathname === string | (string !== "" && trimmedPathname.includes(string));
 }
 
 // Function to slice number

@@ -1,6 +1,9 @@
-import { nanoid } from '@reduxjs/toolkit';
 import React, { useEffect, useRef, useState } from 'react';
+
+import PropTypes from 'prop-types';
+import { nanoid } from '@reduxjs/toolkit';
 import { keyframes, styled } from 'styled-components';
+
 
 
 const Image = ({ image = "", thumbImage = "" }) => {
@@ -43,11 +46,18 @@ const Image = ({ image = "", thumbImage = "" }) => {
                 src={image}
                 loading='lazy'
                 alt="image"
-                // onLoad={handleImageLoaded}
+            // onLoad={handleImageLoaded}
             />
+            
         </Wrapper>
     );
 };
+
+Image.prototypes = {
+    image: PropTypes.string.isRequired,
+    thumbImage: PropTypes.string.isRequired
+}
+
 
 export default Image;
 

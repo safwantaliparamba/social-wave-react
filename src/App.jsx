@@ -9,12 +9,15 @@ import useApi from './components/hooks/useApi';
 import { editUserData } from './store/authSlice';
 import MainRouter from './components/routers/router/MainRouter';
 import SessionExpired from './components/modals/auth/SessionExpired';
+import { pushState } from './store/uiSlice';
+import { useLocation } from 'react-router-dom';
 
 export const ENV = import.meta.env
 
 const App = () => {
 	// hooks
 	const dispatch = useDispatch()
+	const location = useLocation()
 	const { api, controller } = useApi(true)
 	// global state
 	const { isAuthenticated, activeIndex } = useSelector(state => state?.auth)
@@ -57,6 +60,11 @@ const App = () => {
 			controller.abort()
 		}
 	}, [activeIndex])
+
+	useEffect(() => {
+		dispatch(pushState(location.pathname))
+		
+	}, [location.pathname])
 
 	return (
 		<>
